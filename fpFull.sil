@@ -1,0 +1,42 @@
+\begin[class=fontproof]{document}
+\setTestFont[family="Georgia"]
+% Full test file for the fontproof package for SILE
+% If the Georgia font is not installed change the test font line above
+
+\section{Main section head}
+
+Text under main section head
+
+\subsection{Subsection head}
+
+Text under subsection head
+
+\section{Example proof texts}
+
+\proof{This is basic proof text using the test font and with no heading}
+
+\proof[size="10pt",filename="packages/fontproofsupport/Lato2OFL/Lato-Light.ttf",heading=A basic test]{This is another basic text with common parameters}
+
+\proof[size="10pt,11pt,12pt,16pt",heading=A simple waterfall]{This is basic proof text in a range of sizes}
+
+\proof[size="10,11,12,13"]{This is basic proof text in a range of sizes defined with numbers only}
+
+\section{Example pattern texts}
+
+\pattern[chars="@",reps="abcd",heading=A simple hobonop]{h@o@b@o@n@o@p}
+
+\pattern[chars="@,#",reps="abc,xy",heading=A default pattern]{oo@#oo}
+\pattern[chars="@,#",reps="abc,xy",format="table",heading=A pattern with explicit table format]{oo@#oo}
+\pattern[chars="@,#",reps="abc,xy",format="list",heading=A pattern with explicit list format]{oo@#oo}
+\pattern[chars="@,#",reps="abc,xy",format="para",heading=A pattern with explicit para format]{oo@#oo}
+
+\patterngroup[name="vowels"]{aeiou}
+\pattern[chars="@,#",reps="group_vowels,xy",format="table",heading=A pattern using a group]{oo@#oo}
+
+\section{Built-in SILE commands}
+
+\pangrams
+\lorem[words=100]
+\repertoire
+
+\end{document}
