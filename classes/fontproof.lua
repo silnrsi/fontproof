@@ -20,11 +20,13 @@ SILE.scratch.fontproof.section.size = "12pt"
 SILE.scratch.fontproof.subsection.filename = "packages/fontproofsupport/Lato2OFL/Lato-Light.ttf"
 SILE.scratch.fontproof.subsection.size = "12pt"
 SILE.scratch.fontproof.groups = { testgroup = {"p","q","r"} }
+SILE.scratch.fontproof.texts = {}
 
 function fontproof:init()
   self:loadPackage("linespacing")
   self:loadPackage("lorem")
   self:loadPackage("specimen")
+  self:loadPackage("fontprooftexts")
   SILE.settings.set("document.parindent",SILE.nodefactory.zeroGlue)
   SILE.settings.set("document.spaceskip")
   self.pageTemplate.firstContentFrame = self.pageTemplate.frames["content"]
@@ -131,9 +133,22 @@ local function sizesplit (str)
   return sizes
 end
 
+local function processtext (str)
+  local newstr = str
+  local temp = str[1]
+  if string.sub(temp,1,5) == "text_" then
+    textname = string.sub(temp,6)
+    if SILE.scratch.fontproof.texts[textname] ~= nil then
+      newstr[1] = SILE.scratch.fontproof.texts[textname].text
+    end
+  end
+  return newstr
+end
+
 -- special tests
 SILE.registerCommand("proof", function (options, content)
   local proof = {}
+  local procontent = processtext(content)
   if options.type ~= "pattern" then
     if options.heading then
       SILE.call("subsection", {}, {options.heading})
@@ -147,7 +162,7 @@ SILE.registerCommand("proof", function (options, content)
   for i = 1, #proof.sizes do
     SILE.settings.temporarily(function()
       SILE.Commands["font"]({ family = proof.family, filename = proof.filename, size = proof.sizes[i] }, {})
-      SILE.call("raggedright",{},content)
+      SILE.call("raggedright",{},procontent)
     end)
   end
 end)
