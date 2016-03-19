@@ -131,7 +131,7 @@ The command for this would be: (Be sure to follow the syntax of this exactly, or
 \pattern[chars="@,#",reps="abc,xy"]{oo@#oo}
 ```
 
-There are some characters that are special to SILE and Lua and shouldn't be used as _chars_. (A list of suggested safe ones would be a good addition here!)
+There are some characters that are special to SILE and Lua and shouldn't be used as _chars_. (A list of suggested safe ones would be a good addition here!) It's also a bad idea to use a character that is in _reps_.
 
 There is one more optional parameter to the `\pattern` command:
 
@@ -176,6 +176,17 @@ To refer to this in a `\pattern` command prefix the group name with "group_" and
 ```
 \pattern[chars="@,#",reps="group_vowels,xy",format="table"]{oo@#oo}
 ```
+
+There are also a few predefined groups, as listed below. You can also define your own permanent groups in _packages/fontproofgroups.lua_.
+
+| Group Name | Description |
+| ------- | ----------- |
+| group_az | basic lowercase alphabet |
+| group_AZ | basic uppercase alphabet |
+| group_combdiacs | basic combining diacritics |
+| group_09 | basic numerals |
+| group_punct | basic punctuation |
+
 
 ## Additional FontProof Features
 

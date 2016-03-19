@@ -19,14 +19,13 @@ SILE.scratch.fontproof.section.filename = "packages/fontproofsupport/Lato2OFL/La
 SILE.scratch.fontproof.section.size = "12pt"
 SILE.scratch.fontproof.subsection.filename = "packages/fontproofsupport/Lato2OFL/Lato-Light.ttf"
 SILE.scratch.fontproof.subsection.size = "12pt"
-SILE.scratch.fontproof.groups = { testgroup = {"p","q","r"} }
-SILE.scratch.fontproof.texts = {}
 
 function fontproof:init()
   self:loadPackage("linespacing")
   self:loadPackage("lorem")
   self:loadPackage("specimen")
   self:loadPackage("fontprooftexts")
+  self:loadPackage("fontproofgroups")
   SILE.settings.set("document.parindent",SILE.nodefactory.zeroGlue)
   SILE.settings.set("document.spaceskip")
   self.pageTemplate.firstContentFrame = self.pageTemplate.frames["content"]
@@ -180,7 +179,7 @@ SILE.registerCommand("pattern", function(options, content)
     local char, group = chars[i], reps[i]
     if string.sub(group,1,6) == "group_" then
       groupname = string.sub(group,7)
-      gitems = SILE.scratch.fontproof.groups[groupname]
+      gitems = SU.splitUtf8(SILE.scratch.fontproof.groups[groupname])
     else
       gitems = SU.splitUtf8(group)
     end
@@ -216,16 +215,7 @@ end)
 
 SILE.registerCommand("patterngroup", function(options, content)
   SU.required(options, "name")
-  sep = options.sep or ""
-  cp = content[1]
-  if sep == "" then
-    group = SU.splitUtf8(cp)
-  else
-    group = {}
-    for w in cp:gmatch("(.*)"..sep) do
-      group:insert(w)
-    end
-  end
+  group = content[1]
   SILE.scratch.fontproof.groups[options.name] = group
 end)
 
