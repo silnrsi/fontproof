@@ -35,6 +35,7 @@ Text under subsection head
 
 \patterngroup[name="vowels"]{aeiou}
 \pattern[chars="@,#",reps="group_vowels,xy",format="table",heading=A pattern using a group]{oo@#oo}
+\pattern[chars="@,#",reps="group_09,0123456789",format="table",heading=A pattern using one of the predefined groups]{00@#00}
 
 \section{Built-in SILE commands}
 
