@@ -172,7 +172,7 @@ SILE.registerCommand("pattern", function(options, content)
   chars = std.string.split(options.chars,",")
   reps = std.string.split(options.reps,",")
   format = options.format or "table"
-  cont = content[1]
+  cont = processtext(content)[1]
   paras = {}
   if options.heading then SILE.call("subsection", {}, {options.heading})
                      else SILE.call("bigskip") end
