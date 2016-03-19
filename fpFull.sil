@@ -19,11 +19,14 @@ Text under subsection head
 
 \proof[size="10pt,11pt,12pt,16pt",heading=A simple waterfall]{This is basic proof text in a range of sizes}
 
-\proof[size="10,11,12,13"]{This is basic proof text in a range of sizes defined with numbers only}
+\proof[size="10,11,12,16",heading=Another simple waterfall]{This is basic proof text in a range of sizes defined with numbers only}
+
+\proof[size="18,24,30,36",heading=Using a built-in text]{text_az}
 
 \section{Example pattern texts}
 
 \pattern[chars="@",reps="abcd",heading=A simple hobonop]{h@o@b@o@n@o@p}
+\pattern[chars="i",reps="abcd",format="list",heading=Using a built-in frame]{text_pangram}
 
 \pattern[chars="@,#",reps="abc,xy",heading=A default pattern]{oo@#oo}
 \pattern[chars="@,#",reps="abc,xy",format="table",heading=A pattern with explicit table format]{oo@#oo}

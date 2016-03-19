@@ -177,6 +177,36 @@ To refer to this in a `\pattern` command prefix the group name with "group_" and
 \pattern[chars="@,#",reps="group_vowels,xy",format="table"]{oo@#oo}
 ```
 
+## Additional FontProof Features
+
+#### __text_*xxxxx*__
+
+FontProof includes a range of built-in test texts. Set the content of a `\proof` or `\pattern` command to any of the following preset `text_xxxx` names. You can also add your own texts in _packages/fontprooftexts.lua_.
+
+| Content | Description |
+| ------- | ----------- |
+| text_az | basic lowercase alphabet |
+| text_AZ | basic uppercase alphabet |
+| text_combdiacs | basic combining diacritics |
+| text_spacingdiacs | basic spacing diacritics |
+| text_09 | basic numerals |
+| text_numsym | numerals and related symbols |
+| text_nummath | mathematical symbols |
+| text_symbols | common symbols |
+| text_punct | basic punctuation |
+| text_pangram | simple pangram |
+| text_verne | excerpt from _20,000 Leagues Under the Sea_ |
+| text_verneCaps | uppercase version |
+| text_revEng | excerpt from Revelation 7 (English) |
+| text_revFin | excerpt from Revelation 7 (Finnish) |
+| text_revGer | excerpt from Revelation 7 (German) |
+| text_revDut | excerpt from Revelation 7 (Dutch) |
+| text_revInd | excerpt from Revelation 7 (Indonesia) |
+| text_revSwa | excerpt from Revelation 7 (Swahili) |
+
+
+
+
 ## Commands provided natively by SILE
 
 These work in SILE even without FontProof, although you would then need to load them with `\script[src=packages/specimen]`.
