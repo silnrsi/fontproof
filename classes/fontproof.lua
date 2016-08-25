@@ -6,8 +6,8 @@ local fontproof = plain { id = "fontproof", base = plain }
 SILE.scratch.fontproof = {}
 SILE.scratch.fontproof = { runhead = {}, section = {}, subsection = {}, testfont = {}, groups = {} }
 
-fontproof:declareFrame("content",     {left = "8%",             right = "92%",             top = "6%",              bottom = "96%" })
-fontproof:declareFrame("runningHead", {left = "left(content)",  right = "right(content)",  top = "top(content)-3%", bottom = "top(content)-1%" })
+fontproof:declareFrame("content",     {left = "8%pw",             right = "92%pw",             top = "6%ph",              bottom = "96%ph" })
+fontproof:declareFrame("runningHead", {left = "left(content)",  right = "right(content)",  top = "top(content)-3%ph", bottom = "top(content)-1%ph" })
 
 
 -- set defaults
