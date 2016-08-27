@@ -171,6 +171,7 @@ SILE.registerCommand("pattern", function(options, content)
   chars = std.string.split(options.chars,",")
   reps = std.string.split(options.reps,",")
   format = options.format or "table"
+  size = options.size or SILE.scratch.fontproof.testfont.size
   cont = processtext(content)[1]
   paras = {}
   if options.heading then SILE.call("subsection", {}, {options.heading})
@@ -209,7 +210,7 @@ SILE.registerCommand("pattern", function(options, content)
     for j, c in ipairs(chars) do
       para = string.gsub(para,c," ")
     end
-    SILE.Commands["proof"]({size=10,type="pattern"}, {para})
+    SILE.Commands["proof"]({size=size,type="pattern"}, {para})
   end
 end)
 
