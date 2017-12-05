@@ -41,7 +41,7 @@ fontproof.endPage = function(self)
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings.set("document.rskip", SILE.nodefactory.hfillGlue)
     SILE.settings.set("typesetter.parfillskip", SILE.nodefactory.zeroGlue)
-    SILE.settings.set("document.spaceskip", SILE.length.new({ length = SILE.shaper:measureDim(" ") }))
+    SILE.settings.set("document.spaceskip", SILE.length.new({ length = SILE.shaper:measureChar(" ").width }))
     SILE.call("font", { filename = SILE.scratch.fontproof.runhead.filename,
                         size = SILE.scratch.fontproof.runhead.size
                       }, {runheadinfo})
