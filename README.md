@@ -8,7 +8,7 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 
 FontProof requires [SILE](https://github.com/simoncozens/sile). You'll need to install SILE according to that package's instructions, and then verify that it works by compiling the _examples/test.sil_ document.
 
-_Note that SILE is changing rapidly. The current class was developed for an unreleased version (1.9.4). I will try to keep the class up to date for future released versions._
+_Note that SILE is changing rapidly. The current class was developed for unreleased version 0.9.4 but also works with the also unreleased 0.9.5 current master. I will try to keep the class up to date for future released versions._
 
 To install FontProof download this project (or better yet, _git clone_) into any folder on your drive. From within that directory you should then be able to compile the basic FontProof test doc:
 
@@ -29,6 +29,16 @@ To use one of the provided templates, open it in a text editor (maybe make a cop
 ```
 
 Then run SILE on the file with `sile filename`.
+
+You can also specify the test font on the sile command line and leave the font unspecified in the document, as in:
+
+```
+\setTestFont[size=13pt]
+```
+
+Use the `-f` parameter on the sile command, as in:
+
+    $ sile fpTest.sil -f fontfilename.ttf
 
 At this point there is only one template to use - _fpFull.sil_ - but more will follow. That template will show you almost all that FontProof can do. SILE itself is capable of far, far, more, and you're very welcome to play around with it.
 
