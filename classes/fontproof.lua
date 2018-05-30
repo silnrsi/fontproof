@@ -9,15 +9,14 @@ SILE.scratch.fontproof = { runhead = {}, section = {}, subsection = {}, testfont
 fontproof:declareFrame("content",     {left = "8%pw",             right = "92%pw",             top = "6%ph",              bottom = "96%ph" })
 fontproof:declareFrame("runningHead", {left = "left(content)",  right = "right(content)",  top = "top(content)-3%ph", bottom = "top(content)-1%ph" })
 
-
 -- set defaults
-SILE.scratch.fontproof.testfont.filename = "packages/fontproofsupport/Lato2OFL/Lato-Light.ttf"
+SILE.scratch.fontproof.testfont.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
 SILE.scratch.fontproof.testfont.size = "8pt"
-SILE.scratch.fontproof.runhead.filename = "packages/fontproofsupport/Lato2OFL/Lato-Light.ttf"
+SILE.scratch.fontproof.runhead.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
 SILE.scratch.fontproof.runhead.size = "8pt"
-SILE.scratch.fontproof.section.filename = "packages/fontproofsupport/Lato2OFL/Lato-Heavy.ttf"
+SILE.scratch.fontproof.section.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Heavy.ttf")
 SILE.scratch.fontproof.section.size = "12pt"
-SILE.scratch.fontproof.subsection.filename = "packages/fontproofsupport/Lato2OFL/Lato-Light.ttf"
+SILE.scratch.fontproof.subsection.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
 SILE.scratch.fontproof.subsection.size = "12pt"
 
 function fontproof:init()
@@ -51,14 +50,21 @@ fontproof.endPage = function(self)
 end;
 
 SILE.registerCommand("setTestFont", function (options, content)
-  SILE.scratch.fontproof.testfont.size = options.size or "16pt"
-  if options.family then
-    SILE.scratch.fontproof.testfont.family = options.family
-  else
-    SILE.scratch.fontproof.testfont.filename = options.filename
-  end
-  local testfamily = options.family or nil
   local testfilename = options.filename or nil
+  local testfamily = options.family or nil
+  SILE.scratch.fontproof.testfont.size = options.size or "16pt"
+  if testfilename == nil then
+    for j=1,#(_G.unparsed) do
+      if _G.unparsed[j]=="-f" then
+        testfilename = _G.unparsed[j+1]
+      end
+    end
+  end
+  if testfamily then
+    SILE.scratch.fontproof.testfont.family = testfamily
+  else
+    SILE.scratch.fontproof.testfont.filename = testfilename
+  end
   SILE.Commands["font"]({ family = testfamily, filename = testfilename, size = SILE.scratch.fontproof.testfont.size }, {})
 end)
 
