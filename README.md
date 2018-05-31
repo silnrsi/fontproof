@@ -18,6 +18,7 @@ As long as you run all your SILE files from within the original installation fol
 
 - Find your SILE installation directory,
 - Copy the file _classes/fontproof.lua_ into the _sile/classes_ folder, and
+- Copy the file _packages/fontprooftexts.lua_ and _packages/fontproofgroups.lua_ into your installation _sile/packages_ folder.
 - Copy the folder _packages/fontproofsupport_ into your installation _sile/packages_ folder.
 
 ## Using the templates
