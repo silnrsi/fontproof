@@ -271,15 +271,15 @@ We'd love to see even more potential parameters to `\proof`:
 
 This would produce a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range. Some examples:
 
-...
+```
 \unicharchart[type="all",direction="down",columns="12",rows="16"]
-...
+```
 
 This would produce a table that shows every encoded character in the font, formatted as a table with increasing USVs descending down a column, 16 chars per column, with a maximum of 12 columns before breaking into a new table. This is very similar to the tables in The Unicode Standard code charts, and could be the default settings for a simple `\unicharchart`.
 
-...
+```
 \unicharchart[type="range",begin="AA80",end="AADF"]
-...
+```
 
 This would produce the same, except would show only the given range of USVs.
 
