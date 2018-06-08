@@ -267,6 +267,22 @@ We'd love to see even more potential parameters to `\proof`:
 ]{Text}
 ```
 
+#### __\unicharchart__
+
+This would produce a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range. Some examples:
+
+...
+\unicharchart[type="all",direction="down",columns="12",rows="16"]
+...
+
+This would produce a table that shows every encoded character in the font, formatted as a table with increasing USVs descending down a column, 16 chars per column, with a maximum of 12 columns before breaking into a new table. This is very similar to the tables in The Unicode Standard code charts, and could be the default settings for a simple `\unicharchart`.
+
+...
+\unicharchart[type="range",begin="AA80",end="AADF"]
+...
+
+This would produce the same, except would show only the given range of USVs.
+
 #### __\adhesion__ or __\hamburgerfonts__
 
 These would use dictionaries to produce garbage text made up of real words, similar to `\lorem`. However the words would only contain letters from a defined set. Ideally, it could look in to the font, see what letters are there, and produce words that use them.
