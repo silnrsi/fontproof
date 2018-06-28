@@ -13,11 +13,15 @@ fontproof:declareFrame("runningHead", {left = "left(content)",  right = "right(c
 SILE.scratch.fontproof.testfont.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
 SILE.scratch.fontproof.testfont.size = "8pt"
 SILE.scratch.fontproof.runhead.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
-SILE.scratch.fontproof.runhead.size = "8pt"
+SILE.scratch.fontproof.runhead.size = "5pt"
 SILE.scratch.fontproof.section.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Heavy.ttf")
 SILE.scratch.fontproof.section.size = "12pt"
 SILE.scratch.fontproof.subsection.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
 SILE.scratch.fontproof.subsection.size = "12pt"
+SILE.scratch.fontproof.sileversion = SILE.version
+
+local hb = require("justenoughharfbuzz")
+SILE.scratch.fontproof.hb =  hb.version()
 
 function fontproof:init()
   self:loadPackage("linespacing")
@@ -33,9 +37,10 @@ end
 
 fontproof.endPage = function(self)
   if SILE.scratch.fontproof.testfont.family then
-    runheadinfo = SILE.masterFilename .. " - " .. SILE.scratch.fontproof.testfont.family .. " - " .. os.date("%d %b %Y %X")
+    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
   else
-    runheadinfo = SILE.masterFilename .. " - " .. SILE.scratch.fontproof.testfont.filename .. " - " .. os.date("%d %b %Y %X")
+    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.filename .. " - Input file: " .. 
+SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
   end
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings.set("document.rskip", SILE.nodefactory.hfillGlue)
