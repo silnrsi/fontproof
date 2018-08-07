@@ -57,7 +57,9 @@ end;
 SILE.registerCommand("setTestFont", function (options, content)
   local testfilename = options.filename or nil
   local testfamily = options.family or nil
-  SILE.scratch.fontproof.testfont.size = options.size or "16pt"
+  if options.size then
+    SILE.scratch.fontproof.testfont.size = options.size
+  end
   if testfilename == nil then
     for j=1,#(_G.unparsed) do
       if _G.unparsed[j]=="-f" then
@@ -70,7 +72,10 @@ SILE.registerCommand("setTestFont", function (options, content)
   else
     SILE.scratch.fontproof.testfont.filename = testfilename
   end
-  SILE.Commands["font"]({ family = testfamily, filename = testfilename, size = SILE.scratch.fontproof.testfont.size }, {})
+  options.family = testfamily
+  options.filename = testfilename
+  options.size = SILE.scratch.fontproof.testfont.size
+  SILE.Commands["font"](options, {})
 end)
 
 -- optional way to override defaults
