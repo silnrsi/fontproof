@@ -225,8 +225,11 @@ FontProof includes a range of built-in test texts. Set the content of a `\proof`
 | text_revDut | excerpt from Revelation 7 (Dutch) |
 | text_revInd | excerpt from Revelation 7 (Indonesia) |
 | text_revSwa | excerpt from Revelation 7 (Swahili) |
-
-
+| text_arrowroot | traditional font testing text |
+| text_capslower | Latin capitals against the lowercase key letters /o and /n |
+| text_bringhurst | Kerning test from Bringhurst's "Elements of Typographic Style" |
+| text_allkernpairs | Text containing all combinations of Latin upper and lower case letters |
+| text_jafkerns | Kerning test from Just Another Foundry's text generator |
 
 
 ## Commands provided natively by SILE
