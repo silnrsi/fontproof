@@ -225,9 +225,39 @@ FontProof includes a range of built-in test texts. Set the content of a `\proof`
 | text_revDut | excerpt from Revelation 7 (Dutch) |
 | text_revInd | excerpt from Revelation 7 (Indonesia) |
 | text_revSwa | excerpt from Revelation 7 (Swahili) |
+| text_arrowroot | traditional font testing text |
+| text_capslower | Latin capitals against the lowercase key letters /o and /n |
+| text_bringhurst | Kerning test from Bringhurst's "Elements of Typographic Style" |
+| text_allkernpairs | Text containing all combinations of Latin upper and lower case letters |
+| text_jafkerns | Kerning test from Just Another Foundry's text generator |
 
+#### __\adhesion__
 
+This uses dictionaries to produce garbage text made up of real words, similar to `\lorem`. However the words would only contain letters from a set you supply:
 
+```
+\adhesion[chars=hamburgefonsiv]
+```
+
+Optional arguments are `words`, the number of words (defaulting to 120), and `dict`, the path of a dictionary file. The class looks in `/usr/share/dict/words` and `/usr/dict/words` if the `dict` option is not provided.
+
+#### __\unicharchart__
+
+This produces a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range.
+
+Some examples:
+
+```
+\unicharchart[type="all",columns="12",rows="16"]
+```
+
+This produces a table that shows every encoded character in the font, formatted as a table with increasing USVs descending down a column, 16 chars per column, with a maximum of 12 columns before breaking into a new table. This is very similar to the tables in The Unicode Standard code charts, and could be the default settings for a simple `\unicharchart`.
+
+```
+\unicharchart[type="range",begin="AA80",end="AADF"]
+```
+
+This produces the same, except only showing the given range of USVs.
 
 ## Commands provided natively by SILE
 
@@ -266,26 +296,6 @@ We'd love to see even more potential parameters to `\proof`:
   shaper = "OT"
 ]{Text}
 ```
-
-#### __\unicharchart__
-
-This would produce a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range. Some examples:
-
-```
-\unicharchart[type="all",direction="down",columns="12",rows="16"]
-```
-
-This would produce a table that shows every encoded character in the font, formatted as a table with increasing USVs descending down a column, 16 chars per column, with a maximum of 12 columns before breaking into a new table. This is very similar to the tables in The Unicode Standard code charts, and could be the default settings for a simple `\unicharchart`.
-
-```
-\unicharchart[type="range",begin="AA80",end="AADF"]
-```
-
-This would produce the same, except would show only the given range of USVs.
-
-#### __\adhesion__ or __\hamburgerfonts__
-
-These would use dictionaries to produce garbage text made up of real words, similar to `\lorem`. However the words would only contain letters from a defined set. Ideally, it could look in to the font, see what letters are there, and produce words that use them.
 
 #### More preset texts in different languages
 

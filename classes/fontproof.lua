@@ -27,6 +27,7 @@ function fontproof:init()
   self:loadPackage("linespacing")
   self:loadPackage("lorem")
   self:loadPackage("specimen")
+  self:loadPackage("rebox")
   self:loadPackage("fontprooftexts")
   self:loadPackage("fontproofgroups")
   SILE.settings.set("document.parindent",SILE.nodefactory.zeroGlue)
@@ -236,55 +237,168 @@ SILE.registerCommand("patterngroup", function(options, content)
   SILE.scratch.fontproof.groups[options.name] = group
 end)
 
-SILE.registerCommand("proof:arrowroot",function(options, content)
-  SILE.typesetter:typeset("Arrowroot Barley Chervil Dumpling Endive Flaxseed Garbanzo Hijiki Ishtu Jicama Kale Lychee Marjoram Nectarine Oxtail Pizza Quinoa Roquefort Squash Tofu Uppuma Vanilla Wheat Xergis Yogurt Zweiback")
+-- Try and find a dictionary
+local dict = {}
+local function shuffle(tbl)
+  local size = #tbl
+  for i = size, 1, -1 do
+    local rand = math.random(size)
+    tbl[i], tbl[rand] = tbl[rand], tbl[i]
+  end
+  return tbl
+end
+
+SILE.registerCommand("adhesion", function(options,content)
+  local chars = SU.required(options, "characters")
+  local f
+  if #dict == 0 then
+    if options.dict then
+      f = io.open(options.dict, "r")
+    else
+      f,e = io.open("/usr/share/dict/words", "r")
+      if not f then
+        f = io.open("/usr/dict/words", "r")
+      end
+    end
+    if f then
+      for line in f:lines() do
+        line = line:gsub("\n","")
+        table.insert(dict, line)
+      end
+    else
+      SU.error("Couldn't find a dictionary file to use")
+    end
+  end
+
+  local wordcount = options.wordcount or 120
+  words = {}
+  shuffle(dict)
+  for _, word in ipairs(dict) do
+    if wordcount == 0 then break end
+    -- This is fragile. Would be better to check and escape.
+    if word:match("^["..chars.."]+$") then
+      table.insert(words, word)
+      wordcount = wordcount - 1
+    end
+  end
+  SILE.typesetter:typeset(table.concat(words, " ")..".")
 end)
 
-SILE.registerCommand("proof:capslower",function(options, content)
-  SILE.typesetter:typeset("Another Aorta. Boastful Bnai. Contemporary Cnith. Donated Dry. Enough Eons. Forensic Fnord. Gneiss Gonads. Hospital Hnuh. Iodine India. Jon Jnada. Koala Knife. Lord Lning. More Mnemonics. None Nnung. Oops Onion. Pneumatic Portal. Queen. Roast Rnip. Sorted Snorted. Toast Tnanga. Unable Uove. Vocal Vning. Woven Wnoon. Xono Xnuno. Yokel Yngwe. Zoom Znana.")
-end)
+local hasGlyph = function(g)
+  local options = SILE.font.loadDefaults({})
+  local newItems = SILE.shapers.harfbuzz:shapeToken(g, options)
+  for i =1,#newItems do
+    if newItems[i].gid > 0 then
+      return true
+    end
+  end
+  return false
+end
 
-SILE.registerCommand("proof:bringhurst", function (options,content)
-  SILE.typesetter:typeset("I “Ask Jeff” or ‘Ask Jeff’. Take the chef d’œuvre! Two of [of] (of) ‘of’ “of” of? of! of*. Ydes, Yffignac and Ygrande are in France: so are Ypres, Les Woëvres, the Fôret de Wœvres, the Voire and Vauvise. Yves is in heaven; D’Amboise is in jail. Lyford’s in Texas & L’Anse-aux-Griffons in Québec; the Łyna in Poland. Yriarte, Yciar and Ysaÿe are at Yale. Kyoto and Ryotsu are both in Japan, Kwikpak on the Yukon delta, Kvæven in Norway, Kyulu in Kenya, not in Rwanda.… Walton’s in West Virginia, but «Wren» is in Oregon. Tlálpan is near Xochimilco in México. The Zygos & Xylophagou are in Cyprus, Zwettl in Austria, Fænø in Denmark, the Vøringsfossen and Værøy in Norway. Tchula is in Mississippi, the Tittabawassee in Michigan. Twodot is here in Montana, Ywamun in Burma. Yggdrasil and Ymir, Yngvi and Vóden, Vídrið and Skeggjöld and Týr are all in the Eddas. Tørberget and Våg, of course, are in Norway, Ktipas and Tmolos in Greece, but Vázquez is in Argentina, Vreden in Germany, Von-Vincke-Straße in Münster, Vdovino in Russia, Ytterbium in the periodic table. Are Toussaint L’Ouverture, Wölfflin, Wolfe, Miłosz and Wū Wŭ all in the library? 1510–1620, 11:÷00 pm, and the 1980s are over.")
-end)
+SILE.registerCommand("unicharchart", function (options, content)
+  local type = options.type or "all"
+  local rows = tonumber(options.rows) or 16
+  local columns = tonumber(options.columns) or 12
+  local charsize = tonumber(options.charsize) or 14
+  local usvsize = tonumber(options.usvsize) or 6
+  local glyphs = {}
+  local rangeStart
+  local rangeEnd
+  if type == "range" then
+    rangeStart = tonumber(SU.required(options, "start"),16)
+    rangeEnd = tonumber(SU.required(options, "end"),16)
+    for cp = rangeStart,rangeEnd do
+      local uni = SU.utf8charfromcodepoint(tostring(cp))
+      glyphs[#glyphs+1] = { present = hasGlyph(uni), cp = cp, uni = uni }
+    end
+  else
+    -- XXX For now, brute force inspect the glyph set
+    local allglyphs = {}
+    for cp = 0x1,0xFFFF do
+      allglyphs[#allglyphs+1] = SU.utf8charfromcodepoint(tostring(cp))
+    end
+    local s = table.concat(allglyphs,"")
+    local options = SILE.font.loadDefaults({})
+    local items = SILE.shapers.harfbuzz:shapeToken(s, options)
+    for i in ipairs(items) do
+      local cp = SU.codepoint(items[i].text)
+      if items[i].gid ~= 0 and cp > 0 then
+        glyphs[#glyphs+1] = { present = true, cp = cp, uni = items[i].text }
+      end
+    end
+  end
+  local maxrows = math.ceil(#glyphs / rows)
+  local maximum = rows * columns
+  local width = SILE.toPoints("100%fw") / columns
+  local done = 0
+  while done < #glyphs do
+    -- header row
+    if type == "range" then
+      SILE.call("font", {size=charsize}, function()
+        for j = 0,columns-1 do
+          local ix = done + j * rows
+          local cp = rangeStart+ix
+          if cp > rangeEnd then break end
+          SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          SILE.call("hbox", {}, function ()
+            local header = string.format("%04X",cp)
+            SILE.typesetter:typeset(header:sub(1,3))
+          end)
+          local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
+          local centeringglue = SILE.nodefactory.newGlue({width = (width-nbox.width)/2})
+          SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
+          SILE.typesetter:pushHbox(nbox)
+          SILE.typesetter:pushGlue(centeringglue)
+          SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+        end
+      end)
+      SILE.call("bigskip")
+      SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+    end
 
-SILE.registerCommand("proof:allkernpairs", function(options,content)
-  SILE.typesetter:typeset([[jw Shahjahanpur supercalifragilisticexpialidocious acquaintanceship
-dichlorodifluoromethane insightfulnesses jl Erzgebirge vx kx Overijssel
-solemnifying roofgarden boxberries fq substratosphere bxs Gewurztraminer
-disconnectedly jg Thanksgivings bugbears Allhallowmas labdanums pq adjt
-chymotrypsin sleepwalked kibitka awlworts unobjectionable sheqel
-magnetohydrodynamics anthropomorphize goldfields Chappaquiddick Moskva clxii
-misjudgment tx Panmunjom px earthquake outperform mx Netzahualcoyotl Skopje
-bandwidths clavicytherium clampdown zx convolvulaceous honeysuckle qf fz
-Gelbvieh succinylsulfathiazole sixfold bogtrotter subcultural pkwy eurhythmy
-Ecbatana qx jimjams cml crowfeet prajna Flaxman Kafkaesque weekday Reykjavik
-manoeuvrability Hochheimer sauerbraten cobwebby wv Schwarzkopf xrefs
-aftergrowth schnozzle Prokopyevsk Liederkranz eggplant abmho overwhelmingly wx
-Rajput machzor snuffboxes dumdum Fujiyama backgammon xk Qiqihar blowgun
-Oxycontin Tsongkhapa qv Bernbach qp syrinx blowzier Yellowknife
-halfheartedness abhenries Acrux exquisite qn fv Algonquian jf Karlsruhe
-switchgear syzygy nextdoor Mahfouz Iroquoian bq Houyhnhnm Berezniki vq Osmanli
-yukky vj tramroad vf jz cg zj duumvir Aduwa Vazquez Akbar Elroy newsflash xxxv
-colicweed bkcy Leipzig qt hdqrs Alzheimer Balikpapan fwd kudzu Fuzzbuster
-conferva mfd hamza Manxwoman Trabzon Bydgoszcz beachcomber jh qz pulpboard
-Fafnir wq acpt seqq qj Axum Ahvenanmaa qc Abner avdp cj Concepcion Freyja
-Albuquerque yq showjumping Geulincx mkt qk Artaxerxes Macdonald jct
-Bodhisattva baggywrinkle Jodhpur Fitzsimmons bpm qy Hoffman Arjuna foxglove
-Baroja jb Gujranwala Aramco Adkins zf kz exactness mtg gx cf qoph Cuxhaven
-Bradbury ql bevvy jq Azrael myxoedema evzone campground Cuthbert Aqaba
-disbandment qwerty qm Urumqi Oldcastle Bangweulu twayblade Chongjin Qingdao
-Amway Mazda crabgrass Betjeman zugzwang Dreyfus hryvnia Fitzpatrick sx qd xcvi
-Newcastle Sejm qg Avalokitesvara Ghazvanid pvt vb Bitolj Oxnard Shawwal
-Bigfoot Atbara xj Hovhaness dvandva fx Daugavpils vw Chongqing Beckford jx
-misdoubt Sumgait Catawba Iqbal Pfc Guadalquivir Bexley cotquean hx qs
-flexdollars kq dx Noxzema Altman Ayyubid dogvane Changchun Azikiwe Boltzmann
-vm Eijkman Gerlachovka fp hajj Novgorod Cowpens jy Avlona jv fjeld vc
-Ashkenazi Hypnos qh Nejd Procne Liebfraumilch]])
-end)
+    for i = 0,rows-1 do
+      for j = 0,columns-1 do
+        local ix = done + j * rows + i
+        SILE.call("font", {size=charsize}, function()
+          if glyphs[ix+1] then
+              local char = glyphs[ix+1].uni
+              if glyphs[ix+1].present then
+                local left = SILE.shaper:measureChar(char).width
+                local centeringglue = SILE.nodefactory.newGlue({width = SILE.length.new({length = (width-left)/2})})
+                SILE.typesetter:pushGlue(centeringglue)
+                SILE.typesetter:typeset(char)
+                SILE.typesetter:pushGlue(centeringglue)
+              else
+                SILE.typesetter:pushGlue(SILE.nodefactory.newGlue({width = SILE.length.new({length =width }) }))
+              end
+              SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          end
+        end)
 
-SILE.registerCommand("proof:jafkerns", function(options,content)
-  SILE.typesetter:typeset("Tords,' stoweve fording, antlay,” ars. Tomplum Mateds,” Takedis,” dis: 365 nuting,” Gody, be contach art,' Int,” weed; any.' Debta,” fordifir,' beetwe's mulare. Tork. Willy. Lany,” Conal ar, Counta.” vacquilly-Chredis, thavel’s. A. Aphy,” may,” anted) ow,' Tary,” watedif,” ingly,” to Smaxon's,” ing,” Trated wayste.” Somy, ov, ated: Civedy,” (mumbee yedinvis velike,” ourecul at, Expora's aultea,' aw.' istach's joy,” Cam an’s,” istays.' Timate” ings.” droute,” Whys,” (Jullys,” Mureate,” ing.” Aughte. Any.' Tormal’s.” aporia; bear,' Suffeca’s fecute. Satted; bown) ack; ar, aves, we.' likey’s bablive,” ante,” whatiat,” townwelifix-dintom thaved dis, Peteduat’s,” by,” Medshey,” Whys.” is,” Tecompe watight.” throris.” ow,” sych) ardifing,” Takes.' stimpat,' win's,” rating).” Eveated; Finted; Rommunn’s really. Apost,' Eurcal’s for, Fightly,” Turtan atimplin's-storee,' In res.” stedur, Eur,” by,” othated” If Fords.” To-ort-co-Paurty,” autpon’s is. Hom).” Tabst,” ingete.” orthat,” sy.” Ashavin excedur, whys,” Grates.” Meturs,” aged” (ablinve.” istell; willumate,” difing.' wis,” for,” ontativ. Liffic.” staxte,” Treed) ovinte.” my. Pea, torece, Whypeat havelly,' res,” ate,” Accorlik,' thaw.' 'Butly,” thy,” Seared; edurun'stinvey,” aut wat, aw,” aving,” invoinuat.' - foo, andhamb, ought.” Cark: Tres beget’s way,” Jountim; thavoy,' havis ratedife,” worshat,” To thumply, unnumb. Foximun atight.” Hebt,” If, wily.” (abstual’s pated’s toodia. Behave,” ant.” con: Tarece,' (wiligan,' age,' Afteate,” Opte be.” (dur.” (ges,' Hinatto, pat ontly, angs,” (co, thaved” wary,” anked; hung,” istany.” tock,” arm: have.” ot; be) complin’t unton’s,” ing,” my.” Tur.' To parce,” ant,” Evisto, ing,” whavelve.' Intat-tedurd), th's quirs.” Irany,” ang.” ton plight,' arday.” Accongly; atedive,” Tecompla, frecon; cartat,” wought,” istures.” con’s ke,” Ovelf,” Geords,” Chumpla,” Souted comyst,” hirequal” hatedifir,” ang: Astapp. Fampeca.” Tay, an's wignavin; Ambeek,” Outhap. Nowilif, antedly,” inte.' whave,” Intive.” Inted” Bece” wily, Evoce,” frount’s.” thavel's,' is ornall: Accutc.” D.C. Amy.' Tow, ap. hanatin: my, ablist, Requir,” intedly.” Cativinn’s rods, sy,' thaves,” thatim’s vateave,” Pos, “abliblibe.” Pow,” invelf.” imparce,” atedur.' Troves,' hatech ing). 40 say,” int. Ming,” ifirs,” ont’s,” evellis, of th: “hatilivin toweatz, youreb. To-cornagratt,” Teauta,' Heatelie.” Uning.” th any,” ing.' thated; work: Tobjece.” beedur,” Duking, Jource.” Buromps,” Artant,” Tobjecat, Recant,” stint,” whis,” (affirob. Aftedia,” Tor.” Navell: antly.” (banatinna, intorat be.” Sys,' Contarry.” Ack,” complat.” tedirt, Intedis,” Offe,” ings,” by,” In than's.' Burvinte,” ox, Cypown's ally,” Atte,” al’s Islive wordre. To gly-Wely,' an argativing,” Sevathave.” Toduablin.” flative.' - Tecaught.' Toyear.' How glardia,” (forly. In als.' still pors.” body’s.” th’s tomakes.” tood ing: Stanth’s,” optedur, apeall), wordiump,” ontedin's,” whatia.' lim; any,” behavir, wrow,” wish thany,” Counte,” Use.” weeduang,” re.")
+      end
+      SILE.call("par")
+      SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+      SILE.call("font", {size=usvsize}, function()
+        for j = 0,columns-1 do
+          local ix = done + j * rows + i
+          if glyphs[ix+1] then
+            SILE.call("hbox", {}, function ()
+              SILE.typesetter:typeset(string.format("%04X",glyphs[ix+1].cp))
+            end)
+            local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
+            local centeringglue = SILE.nodefactory.newGlue({width = (width-nbox.width)/2})
+            SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
+            SILE.typesetter:pushHbox(nbox)
+            SILE.typesetter:pushGlue(centeringglue)
+            SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          end
+        end
+      end)
+      SILE.call("bigskip")
+    end
+    SILE.call("pagebreak")
+    done = done  +rows*columns
+  end
 end)
 
 return fontproof
