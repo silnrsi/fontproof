@@ -27,6 +27,7 @@ function fontproof:init()
   self:loadPackage("linespacing")
   self:loadPackage("lorem")
   self:loadPackage("specimen")
+  self:loadPackage("rebox")
   self:loadPackage("fontprooftexts")
   self:loadPackage("fontproofgroups")
   SILE.settings.set("document.parindent",SILE.nodefactory.zeroGlue)
@@ -281,6 +282,123 @@ SILE.registerCommand("adhesion", function(options,content)
     end
   end
   SILE.typesetter:typeset(table.concat(words, " ")..".")
+end)
+
+local hasGlyph = function(g)
+  local options = SILE.font.loadDefaults({})
+  local newItems = SILE.shapers.harfbuzz:shapeToken(g, options)
+  for i =1,#newItems do
+    if newItems[i].gid > 0 then
+      return true
+    end
+  end
+  return false
+end
+
+SILE.registerCommand("unicharchart", function (options, content)
+  local type = options.type or "all"
+  local rows = tonumber(options.rows) or 16
+  local columns = tonumber(options.columns) or 12
+  local charsize = tonumber(options.charsize) or 14
+  local usvsize = tonumber(options.usvsize) or 6
+  local glyphs = {}
+  local rangeStart
+  local rangeEnd
+  if type == "range" then
+    rangeStart = tonumber(SU.required(options, "start"),16)
+    rangeEnd = tonumber(SU.required(options, "end"),16)
+    for cp = rangeStart,rangeEnd do
+      local uni = SU.utf8charfromcodepoint(tostring(cp))
+      glyphs[#glyphs+1] = { present = hasGlyph(uni), cp = cp, uni = uni }
+    end
+  else
+    -- XXX For now, brute force inspect the glyph set
+    local allglyphs = {}
+    for cp = 0x1,0xFFFF do
+      allglyphs[#allglyphs+1] = SU.utf8charfromcodepoint(tostring(cp))
+    end
+    local s = table.concat(allglyphs,"")
+    local options = SILE.font.loadDefaults({})
+    local items = SILE.shapers.harfbuzz:shapeToken(s, options)
+    for i in ipairs(items) do
+      local cp = SU.codepoint(items[i].text)
+      if items[i].gid ~= 0 and cp > 0 then
+        glyphs[#glyphs+1] = { present = true, cp = cp, uni = items[i].text }
+      end
+    end
+  end
+  local maxrows = math.ceil(#glyphs / rows)
+  local maximum = rows * columns
+  local width = SILE.toPoints("100%fw") / columns
+  local done = 0
+  while done < #glyphs do
+    -- header row
+    if type == "range" then
+      SILE.call("font", {size=charsize}, function()
+        for j = 0,columns-1 do
+          local ix = done + j * rows
+          local cp = rangeStart+ix
+          if cp > rangeEnd then break end
+          SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          SILE.call("hbox", {}, function ()
+            local header = string.format("%04X",cp)
+            SILE.typesetter:typeset(header:sub(1,3))
+          end)
+          local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
+          local centeringglue = SILE.nodefactory.newGlue({width = (width-nbox.width)/2})
+          SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
+          SILE.typesetter:pushHbox(nbox)
+          SILE.typesetter:pushGlue(centeringglue)
+          SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+        end
+      end)
+      SILE.call("bigskip")
+      SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+    end
+
+    for i = 0,rows-1 do
+      for j = 0,columns-1 do
+        local ix = done + j * rows + i
+        SILE.call("font", {size=charsize}, function()
+          if glyphs[ix+1] then
+              local char = glyphs[ix+1].uni
+              if glyphs[ix+1].present then
+                local left = SILE.shaper:measureChar(char).width
+                local centeringglue = SILE.nodefactory.newGlue({width = SILE.length.new({length = (width-left)/2})})
+                SILE.typesetter:pushGlue(centeringglue)
+                SILE.typesetter:typeset(char)
+                SILE.typesetter:pushGlue(centeringglue)
+              else
+                SILE.typesetter:pushGlue(SILE.nodefactory.newGlue({width = SILE.length.new({length =width }) }))
+              end
+              SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          end
+        end)
+
+      end
+      SILE.call("par")
+      SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+      SILE.call("font", {size=usvsize}, function()
+        for j = 0,columns-1 do
+          local ix = done + j * rows + i
+          if glyphs[ix+1] then
+            SILE.call("hbox", {}, function ()
+              SILE.typesetter:typeset(string.format("%04X",glyphs[ix+1].cp))
+            end)
+            local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
+            local centeringglue = SILE.nodefactory.newGlue({width = (width-nbox.width)/2})
+            SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
+            SILE.typesetter:pushHbox(nbox)
+            SILE.typesetter:pushGlue(centeringglue)
+            SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          end
+        end
+      end)
+      SILE.call("bigskip")
+    end
+    SILE.call("pagebreak")
+    done = done  +rows*columns
+  end
 end)
 
 return fontproof

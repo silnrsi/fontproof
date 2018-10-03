@@ -241,6 +241,24 @@ This uses dictionaries to produce garbage text made up of real words, similar to
 
 Optional arguments are `words`, the number of words (defaulting to 120), and `dict`, the path of a dictionary file. The class looks in `/usr/share/dict/words` and `/usr/dict/words` if the `dict` option is not provided.
 
+#### __\unicharchart__
+
+This produces a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range.
+
+Some examples:
+
+```
+\unicharchart[type="all",columns="12",rows="16"]
+```
+
+This produces a table that shows every encoded character in the font, formatted as a table with increasing USVs descending down a column, 16 chars per column, with a maximum of 12 columns before breaking into a new table. This is very similar to the tables in The Unicode Standard code charts, and could be the default settings for a simple `\unicharchart`.
+
+```
+\unicharchart[type="range",begin="AA80",end="AADF"]
+```
+
+This produces the same, except only showing the given range of USVs.
+
 ## Commands provided natively by SILE
 
 These work in SILE even without FontProof, although you would then need to load them with `\script[src=packages/specimen]`.
@@ -278,22 +296,6 @@ We'd love to see even more potential parameters to `\proof`:
   shaper = "OT"
 ]{Text}
 ```
-
-#### __\unicharchart__
-
-This would produce a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range. Some examples:
-
-```
-\unicharchart[type="all",direction="down",columns="12",rows="16"]
-```
-
-This would produce a table that shows every encoded character in the font, formatted as a table with increasing USVs descending down a column, 16 chars per column, with a maximum of 12 columns before breaking into a new table. This is very similar to the tables in The Unicode Standard code charts, and could be the default settings for a simple `\unicharchart`.
-
-```
-\unicharchart[type="range",begin="AA80",end="AADF"]
-```
-
-This would produce the same, except would show only the given range of USVs.
 
 #### More preset texts in different languages
 
