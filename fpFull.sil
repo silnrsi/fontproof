@@ -37,6 +37,10 @@ Text under subsection head
 \pattern[chars="@,#",reps="group_vowels,xy",format="table",heading=A pattern using a group]{oo@#oo}
 \pattern[chars="@,#",reps="group_09,0123456789",format="table",heading=A pattern using one of the predefined groups]{00@#00}
 
+\section{Other tests}
+
+Adhesion: \adhesion[characters=adhesion]
+
 \section{Built-in SILE commands}
 
 \pangrams

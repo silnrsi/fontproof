@@ -231,6 +231,15 @@ FontProof includes a range of built-in test texts. Set the content of a `\proof`
 | text_allkernpairs | Text containing all combinations of Latin upper and lower case letters |
 | text_jafkerns | Kerning test from Just Another Foundry's text generator |
 
+#### __\adhesion__
+
+This uses dictionaries to produce garbage text made up of real words, similar to `\lorem`. However the words would only contain letters from a set you supply:
+
+```
+\adhesion[chars=hamburgefonsiv]
+```
+
+Optional arguments are `words`, the number of words (defaulting to 120), and `dict`, the path of a dictionary file. The class looks in `/usr/share/dict/words` and `/usr/dict/words` if the `dict` option is not provided.
 
 ## Commands provided natively by SILE
 
@@ -285,10 +294,6 @@ This would produce a table that shows every encoded character in the font, forma
 ```
 
 This would produce the same, except would show only the given range of USVs.
-
-#### __\adhesion__ or __\hamburgerfonts__
-
-These would use dictionaries to produce garbage text made up of real words, similar to `\lorem`. However the words would only contain letters from a defined set. Ideally, it could look in to the font, see what letters are there, and produce words that use them.
 
 #### More preset texts in different languages
 

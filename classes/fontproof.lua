@@ -236,4 +236,51 @@ SILE.registerCommand("patterngroup", function(options, content)
   SILE.scratch.fontproof.groups[options.name] = group
 end)
 
+-- Try and find a dictionary
+local dict = {}
+local function shuffle(tbl)
+  local size = #tbl
+  for i = size, 1, -1 do
+    local rand = math.random(size)
+    tbl[i], tbl[rand] = tbl[rand], tbl[i]
+  end
+  return tbl
+end
+
+SILE.registerCommand("adhesion", function(options,content)
+  local chars = SU.required(options, "characters")
+  local f
+  if #dict == 0 then
+    if options.dict then
+      f = io.open(options.dict, "r")
+    else
+      f,e = io.open("/usr/share/dict/words", "r")
+      if not f then
+        f = io.open("/usr/dict/words", "r")
+      end
+    end
+    if f then
+      for line in f:lines() do
+        line = line:gsub("\n","")
+        table.insert(dict, line)
+      end
+    else
+      SU.error("Couldn't find a dictionary file to use")
+    end
+  end
+
+  local wordcount = options.wordcount or 120
+  words = {}
+  shuffle(dict)
+  for _, word in ipairs(dict) do
+    if wordcount == 0 then break end
+    -- This is fragile. Would be better to check and escape.
+    if word:match("^["..chars.."]+$") then
+      table.insert(words, word)
+      wordcount = wordcount - 1
+    end
+  end
+  SILE.typesetter:typeset(table.concat(words, " ")..".")
+end)
+
 return fontproof
