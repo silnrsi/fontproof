@@ -41,6 +41,10 @@ Text under subsection head
 
 Adhesion: \adhesion[characters=adhesion]
 
+\setTestFont[family="EB Garamond"]
+\proof[features = "Ligatures=Discretionary, Ligatures=Historic",language = "grk",direction = "rtl",columns = 3,lines = 12,color = #999999,shaper = "OT"]{This Turns on Historical Features}
+\setTestFont[family="Georgia"]
+
 \section{Built-in SILE commands}
 
 \pangrams

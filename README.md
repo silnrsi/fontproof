@@ -119,6 +119,13 @@ This is the main FontProof command, and can be used to set both simple test text
 \proof[size="10pt,11pt,12pt,16pt"]{This is basic proof text in a range of sizes}
 
 \proof[size="10,11,12,13,20"]{This is basic proof text in a range of sizes with numbers only}
+
+\proof[features="Ligatures=Rare, Ligatures=Discretionary"]{This is a proof with rare ligatures turned on}
+
+\proof[features="+dlig,+hlig"]{This is a proof with features manipulated manually}
+
+\proof[language="grk",direction = "rtl"]{Here are some options which are passed on to the font command}
+
 ```
 
 #### __\pattern[]{}__
@@ -290,10 +297,6 @@ We'd love to see even more potential parameters to `\proof`:
 ```
 \proof[
   size = "10, 11/13, 12/16",
-  features = "Ligatures=Rare, Ligatures=Discretionary"
-  featuresraw = "+dlig,+hlig",
-  language = "grk",
-  direction = "rtl",
   columns = 3,
   lines = 12,
   color = #999999,
