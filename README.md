@@ -270,6 +270,14 @@ This produces a table that shows every encoded character in the font, formatted 
 
 This produces the same, except only showing the given range of USVs.
 
+####  __\gutenberg__
+
+This downloads and typesets a text from Project Gutenberg.
+
+```
+\gutenberg[id=100] % The complete works of Shakespeare
+```
+
 ## Commands provided natively by SILE
 
 These work in SILE even without FontProof, although you would then need to load them with `\script[src=packages/specimen]`.
@@ -303,10 +311,6 @@ We'd love to see even more potential parameters to `\proof`:
   shaper = "OT"
 ]{Text}
 ```
-
-#### More preset texts in different languages
-
-These would be like `\pangrams` but be configurable by language. They would also contain pages and pages of real (public domain) texts.
 
 #### Tests for numbers and punctuation
 

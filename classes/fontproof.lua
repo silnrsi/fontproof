@@ -31,6 +31,7 @@ function fontproof:init()
   self:loadPackage("features")
   self:loadPackage("fontprooftexts")
   self:loadPackage("fontproofgroups")
+  self:loadPackage("gutenberg-client")
   SILE.settings.set("document.parindent",SILE.nodefactory.zeroGlue)
   SILE.settings.set("document.spaceskip")
   self.pageTemplate.firstContentFrame = self.pageTemplate.frames["content"]
