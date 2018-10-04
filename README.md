@@ -10,7 +10,11 @@ FontProof requires [SILE](https://github.com/simoncozens/sile). You'll need to i
 
 _Note that SILE is changing rapidly. The current class was developed for unreleased version 0.9.4 but also works with the also unreleased 0.9.5 current master. I will try to keep the class up to date for future released versions._
 
-To install FontProof download this project (or better yet, _git clone_) into any folder on your drive. From within that directory you should then be able to compile the basic FontProof test doc:
+To install FontProof on SILE 0.9.5, run:
+
+    sile -e 'installPackage("fontproof");os.exit()'
+
+On older versions, download this project (or better yet, _git clone_) into any folder on your drive. From within that directory you should then be able to compile the basic FontProof test doc:
 
     $ sile fpTest.sil
 
