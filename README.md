@@ -126,6 +126,8 @@ This is the main FontProof command, and can be used to set both simple test text
 
 \proof[language="grk",direction = "rtl"]{Here are some options which are passed on to the font command}
 
+\proof[color="green"]{Here are some options which are passed on to the color command}
+
 \proof[shapers="ot,fallback"]{Here we pass a list of subshapers to Harfbuzz}
 ```
 
@@ -307,8 +309,7 @@ We'd love to see even more potential parameters to `\proof`:
 \proof[
   size = "10, 11/13, 12/16",
   columns = 3,
-  lines = 12,
-  color = #999999
+  lines = 12
 ]{Text}
 ```
 

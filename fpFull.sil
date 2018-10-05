@@ -42,7 +42,7 @@ Text under subsection head
 Adhesion: \adhesion[characters=adhesion]
 
 \setTestFont[family="EB Garamond"]
-\proof[features = "Ligatures=Discretionary, Ligatures=Historic",language = "grk",direction = "rtl",shapers = "ot"]{This Turns on Historical Features}
+\proof[features = "Ligatures=Discretionary, Ligatures=Historic",language = "grk",direction = "rtl",shapers = "ot", color="green"]{This Turns on Historical Features}
 \setTestFont[family="Georgia"]
 
 \section{Built-in SILE commands}

@@ -29,6 +29,7 @@ function fontproof:init()
   self:loadPackage("specimen")
   self:loadPackage("rebox")
   self:loadPackage("features")
+  self:loadPackage("color")
   self:loadPackage("fontprooftexts")
   self:loadPackage("fontproofgroups")
   self:loadPackage("gutenberg-client")
@@ -182,30 +183,32 @@ SILE.registerCommand("proof", function (options, content)
     else SU.warn("Can't use shapers on this version of SILE; upgrade!") end
   end
   proof.family, proof.filename = fontsource(options.family, options.filename)
-  for i = 1, #proof.sizes do
-    SILE.settings.temporarily(function()
-      local fontoptions ={ family = proof.family, filename = proof.filename, size = proof.sizes[i] }
-      -- Pass on some options from \proof to \font.
-      local tocopy = { "language"; "direction"; "script" }
-      for i = 1,#tocopy do
-        if options[tocopy[i]] then fontoptions[tocopy[i]] = options[tocopy[i]] end
-      end
-      -- Add feature options
-      if options.featuresraw then fontoptions.features = options.featuresraw end
-      if options.features then
-        for i in SU.gtoke(options.features, ",") do
-          if i.string then
-            local feat = {}
-            _,_,k,v = i.string:find("(%w+)=(.*)")
-            feat[k] = v
-            SILE.call("add-font-feature", feat, {})
+  SILE.call("color", options, function ()
+    for i = 1, #proof.sizes do
+      SILE.settings.temporarily(function()
+        local fontoptions ={ family = proof.family, filename = proof.filename, size = proof.sizes[i] }
+        -- Pass on some options from \proof to \font.
+        local tocopy = { "language"; "direction"; "script" }
+        for i = 1,#tocopy do
+          if options[tocopy[i]] then fontoptions[tocopy[i]] = options[tocopy[i]] end
+        end
+        -- Add feature options
+        if options.featuresraw then fontoptions.features = options.featuresraw end
+        if options.features then
+          for i in SU.gtoke(options.features, ",") do
+            if i.string then
+              local feat = {}
+              _,_,k,v = i.string:find("(%w+)=(.*)")
+              feat[k] = v
+              SILE.call("add-font-feature", feat, {})
+            end
           end
         end
-      end
-      SILE.Commands["font"](fontoptions, {})
-      SILE.call("raggedright",{},procontent)
-    end)
-  end
+        SILE.Commands["font"](fontoptions, {})
+        SILE.call("raggedright",{},procontent)
+      end)
+    end
+  end)
 end)
 
 SILE.registerCommand("pattern", function(options, content)
