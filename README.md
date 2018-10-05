@@ -281,6 +281,14 @@ This downloads and typesets a text from Project Gutenberg.
 \gutenberg[id=100] % The complete works of Shakespeare
 ```
 
+####  __\pi__
+
+Typesets some digits of pi:
+
+```
+\pi[digits=500]
+```
+
 ## Commands provided natively by SILE
 
 These work in SILE even without FontProof, although you would then need to load them with `\script[src=packages/specimen]`.
@@ -312,10 +320,6 @@ We'd love to see even more potential parameters to `\proof`:
   lines = 12
 ]{Text}
 ```
-
-#### Tests for numbers and punctuation
-
-`\pattern[chars="@",reps="0123456789",format="list"]{0@1@2@3@4@5@6@7@8@9@0}` is already useful. `\pi[digits=100]` would be fun.
 
 #### Support for multiple fonts with a single test type
 

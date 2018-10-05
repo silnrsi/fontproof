@@ -41,6 +41,10 @@ Text under subsection head
 
 Adhesion: \adhesion[characters=adhesion]
 
+\bigskip
+
+Here are some digits of pi: \pi[digits=500]
+
 \setTestFont[family="EB Garamond"]
 \proof[features = "Ligatures=Discretionary, Ligatures=Historic",language = "grk",direction = "rtl",shapers = "ot", color="green"]{This Turns on Historical Features}
 \setTestFont[family="Georgia"]

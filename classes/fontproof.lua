@@ -323,6 +323,23 @@ local hasGlyph = function(g)
   return false
 end
 
+SILE.registerCommand("pi", function (options, content)
+  local digits = tonumber(options.digits) or 100
+  local url = "https://uploadbeta.com/api/pi/?n="..(digits+4)
+  if not pcall(function() http = require("ssl.https") end) then
+    SU.error("Install luasec from luarocks")
+  end
+  local result, statuscode, content = http.request(url)
+    if statuscode ~= 200 then
+    SU.error("Could not read pi from "..url..": "..statuscode)
+  end
+  digits = "3."..result:sub(4,-2)
+  for i = 1,#digits do
+    SILE.typesetter:typeset(digits:sub(i,i))
+    SILE.typesetter:pushPenalty({}) -- Ugly
+  end
+end)
+
 SILE.registerCommand("unicharchart", function (options, content)
   local type = options.type or "all"
   local rows = tonumber(options.rows) or 16
