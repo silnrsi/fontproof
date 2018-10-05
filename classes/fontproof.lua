@@ -176,6 +176,11 @@ SILE.registerCommand("proof", function (options, content)
   end
   if options.size then proof.sizes = sizesplit(options.size)
                   else proof.sizes = {SILE.scratch.fontproof.testfont.size} end
+  if options.shapers then
+    if SILE.settings.declarations["harfbuzz.subshapers"] then
+      SILE.settings.set("harfbuzz.subshapers", options.shapers)
+    else SU.warn("Can't use shapers on this version of SILE; upgrade!") end
+  end
   proof.family, proof.filename = fontsource(options.family, options.filename)
   for i = 1, #proof.sizes do
     SILE.settings.temporarily(function()
