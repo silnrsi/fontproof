@@ -175,9 +175,9 @@ function getGutenberg(id)
   local go = false
   for token in SU.gtoke(result,"\n") do
     local s = token.string or token.separator
-    if s:match("*** END") then break end
+    if s:match("***[ ]*END") then break end
     if go then table.insert(lines, s) end
-    if s:match("*** START OF") then go = true end
+    if s:match("***[ ]*START OF") then go = true end
   end
   return table.concat(lines,"")
 end
