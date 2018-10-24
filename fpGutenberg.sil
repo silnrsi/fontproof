@@ -1,0 +1,9 @@
+\begin[class=fontproof]{document}
+\setTestFont[family="Gentium"]
+\set[parameter=document.parskip,value=12pt plus 2pt minus 2pt]
+\gutenberg[id=32549]
+
+\set[parameter=document.parskip,value=2pt]
+\setTestFont[family="Murty Telugu"]
+\gutenberg[id=39561]
+\end{document}

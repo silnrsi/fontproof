@@ -28,8 +28,11 @@ function fontproof:init()
   self:loadPackage("lorem")
   self:loadPackage("specimen")
   self:loadPackage("rebox")
+  self:loadPackage("features")
+  self:loadPackage("color")
   self:loadPackage("fontprooftexts")
   self:loadPackage("fontproofgroups")
+  self:loadPackage("gutenberg-client")
   SILE.settings.set("document.parindent",SILE.nodefactory.zeroGlue)
   SILE.settings.set("document.spaceskip")
   self.pageTemplate.firstContentFrame = self.pageTemplate.frames["content"]
@@ -174,13 +177,38 @@ SILE.registerCommand("proof", function (options, content)
   end
   if options.size then proof.sizes = sizesplit(options.size)
                   else proof.sizes = {SILE.scratch.fontproof.testfont.size} end
-  proof.family, proof.filename = fontsource(options.family, options.filename)
-  for i = 1, #proof.sizes do
-    SILE.settings.temporarily(function()
-      SILE.Commands["font"]({ family = proof.family, filename = proof.filename, size = proof.sizes[i] }, {})
-      SILE.call("raggedright",{},procontent)
-    end)
+  if options.shapers then
+    if SILE.settings.declarations["harfbuzz.subshapers"] then
+      SILE.settings.set("harfbuzz.subshapers", options.shapers)
+    else SU.warn("Can't use shapers on this version of SILE; upgrade!") end
   end
+  proof.family, proof.filename = fontsource(options.family, options.filename)
+  SILE.call("color", options, function ()
+    for i = 1, #proof.sizes do
+      SILE.settings.temporarily(function()
+        local fontoptions ={ family = proof.family, filename = proof.filename, size = proof.sizes[i] }
+        -- Pass on some options from \proof to \font.
+        local tocopy = { "language"; "direction"; "script" }
+        for i = 1,#tocopy do
+          if options[tocopy[i]] then fontoptions[tocopy[i]] = options[tocopy[i]] end
+        end
+        -- Add feature options
+        if options.featuresraw then fontoptions.features = options.featuresraw end
+        if options.features then
+          for i in SU.gtoke(options.features, ",") do
+            if i.string then
+              local feat = {}
+              _,_,k,v = i.string:find("(%w+)=(.*)")
+              feat[k] = v
+              SILE.call("add-font-feature", feat, {})
+            end
+          end
+        end
+        SILE.Commands["font"](fontoptions, {})
+        SILE.call("raggedright",{},procontent)
+      end)
+    end
+  end)
 end)
 
 SILE.registerCommand("pattern", function(options, content)
@@ -294,6 +322,23 @@ local hasGlyph = function(g)
   end
   return false
 end
+
+SILE.registerCommand("pi", function (options, content)
+  local digits = tonumber(options.digits) or 100
+  local url = "https://uploadbeta.com/api/pi/?n="..(digits+4)
+  if not pcall(function() http = require("ssl.https") end) then
+    SU.error("Install luasec from luarocks")
+  end
+  local result, statuscode, content = http.request(url)
+    if statuscode ~= 200 then
+    SU.error("Could not read pi from "..url..": "..statuscode)
+  end
+  digits = "3."..result:sub(4,-2)
+  for i = 1,#digits do
+    SILE.typesetter:typeset(digits:sub(i,i))
+    SILE.typesetter:pushPenalty({}) -- Ugly
+  end
+end)
 
 SILE.registerCommand("unicharchart", function (options, content)
   local type = options.type or "all"

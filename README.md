@@ -10,7 +10,11 @@ FontProof requires [SILE](https://github.com/simoncozens/sile). You'll need to i
 
 _Note that SILE is changing rapidly. The current class was developed for unreleased version 0.9.4 but also works with the also unreleased 0.9.5 current master. I will try to keep the class up to date for future released versions._
 
-To install FontProof download this project (or better yet, _git clone_) into any folder on your drive. From within that directory you should then be able to compile the basic FontProof test doc:
+To install FontProof on SILE 0.9.5, run:
+
+    sile -e 'installPackage("fontproof");os.exit()'
+
+On older versions, download this project (or better yet, _git clone_) into any folder on your drive. From within that directory you should then be able to compile the basic FontProof test doc:
 
     $ sile fpTest.sil
 
@@ -115,6 +119,16 @@ This is the main FontProof command, and can be used to set both simple test text
 \proof[size="10pt,11pt,12pt,16pt"]{This is basic proof text in a range of sizes}
 
 \proof[size="10,11,12,13,20"]{This is basic proof text in a range of sizes with numbers only}
+
+\proof[features="Ligatures=Rare, Ligatures=Discretionary"]{This is a proof with rare ligatures turned on}
+
+\proof[features="+dlig,+hlig"]{This is a proof with features manipulated manually}
+
+\proof[language="grk",direction = "rtl"]{Here are some options which are passed on to the font command}
+
+\proof[color="green"]{Here are some options which are passed on to the color command}
+
+\proof[shapers="ot,fallback"]{Here we pass a list of subshapers to Harfbuzz}
 ```
 
 #### __\pattern[]{}__
@@ -259,6 +273,22 @@ This produces a table that shows every encoded character in the font, formatted 
 
 This produces the same, except only showing the given range of USVs.
 
+####  __\gutenberg__
+
+This downloads and typesets a text from Project Gutenberg.
+
+```
+\gutenberg[id=100] % The complete works of Shakespeare
+```
+
+####  __\pi__
+
+Typesets some digits of pi:
+
+```
+\pi[digits=500]
+```
+
 ## Commands provided natively by SILE
 
 These work in SILE even without FontProof, although you would then need to load them with `\script[src=packages/specimen]`.
@@ -286,24 +316,10 @@ We'd love to see even more potential parameters to `\proof`:
 ```
 \proof[
   size = "10, 11/13, 12/16",
-  features = "Ligatures=Rare, Ligatures=Discretionary"
-  featuresraw = "+dlig,+hlig",
-  language = "grk",
-  direction = "rtl",
   columns = 3,
-  lines = 12,
-  color = #999999,
-  shaper = "OT"
+  lines = 12
 ]{Text}
 ```
-
-#### More preset texts in different languages
-
-These would be like `\pangrams` but be configurable by language. They would also contain pages and pages of real (public domain) texts.
-
-#### Tests for numbers and punctuation
-
-`\pattern[chars="@",reps="0123456789",format="list"]{0@1@2@3@4@5@6@7@8@9@0}` is already useful. `\pi[digits=100]` would be fun.
 
 #### Support for multiple fonts with a single test type
 
