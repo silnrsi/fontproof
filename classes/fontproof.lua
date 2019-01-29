@@ -40,11 +40,11 @@ function fontproof:init()
 end
 
 fontproof.endPage = function(self)
-  if SILE.scratch.fontproof.testfont.family then
-    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
-  else
+  if SILE.scratch.fontproof.testfont.filename then
     runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.filename .. " - Input file: " .. 
 SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
+  else
+    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
   end
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
     SILE.settings.set("document.rskip", SILE.nodefactory.hfillGlue)
@@ -130,15 +130,18 @@ end)
 
 -- useful functions
 local function fontsource (fam, file)
-  if fam then
-    family = fam
-    filename = nil
-  elseif file then
+  if file then
     family = nil
     filename = file
+  elseif fam then
+    family = fam
+    filename = nil
+  elseif SILE.scratch.fontproof.testfont.filename then
+    filename = SILE.scratch.fontproof.testfont.filename
+    family = nil
   else
     family = SILE.scratch.fontproof.testfont.family
-    filename = SILE.scratch.fontproof.testfont.filename
+    filename = nil
   end
   return family, filename
 end
