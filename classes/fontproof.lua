@@ -10,13 +10,13 @@ fontproof:declareFrame("content",     {left = "8%pw",             right = "92%pw
 fontproof:declareFrame("runningHead", {left = "left(content)",  right = "right(content)",  top = "top(content)-3%ph", bottom = "top(content)-1%ph" })
 
 -- set defaults
-SILE.scratch.fontproof.testfont.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
+SILE.scratch.fontproof.testfont.family = "Gentium Plus"
 SILE.scratch.fontproof.testfont.size = "8pt"
-SILE.scratch.fontproof.runhead.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
+SILE.scratch.fontproof.runhead.family = "Gentium Plus"
 SILE.scratch.fontproof.runhead.size = "5pt"
-SILE.scratch.fontproof.section.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Heavy.ttf")
+SILE.scratch.fontproof.section.family = "Gentium Plus"
 SILE.scratch.fontproof.section.size = "12pt"
-SILE.scratch.fontproof.subsection.filename = SILE.resolveFile("packages/fontproofsupport/Lato2OFL/Lato-Light.ttf")
+SILE.scratch.fontproof.subsection.family = "Gentium Plus"
 SILE.scratch.fontproof.subsection.size = "12pt"
 SILE.scratch.fontproof.sileversion = SILE.version
 
@@ -50,7 +50,7 @@ SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE 
     SILE.settings.set("document.rskip", SILE.nodefactory.hfillGlue)
     SILE.settings.set("typesetter.parfillskip", SILE.nodefactory.zeroGlue)
     SILE.settings.set("document.spaceskip", SILE.length.new({ length = SILE.shaper:measureChar(" ").width }))
-    SILE.call("font", { filename = SILE.scratch.fontproof.runhead.filename,
+    SILE.call("font", { family = SILE.scratch.fontproof.runhead.family,
                         size = SILE.scratch.fontproof.runhead.size
                       }, {runheadinfo})
     SILE.call("par")
@@ -84,7 +84,7 @@ end)
 
 -- optional way to override defaults
 SILE.registerCommand("setRunHeadStyle", function (options, content)
-  SILE.scratch.fontproof.runhead.filename = options.filename
+  SILE.scratch.fontproof.runhead.family = options.family
   SILE.scratch.fontproof.runhead.size = options.size or "8pt"
 end)
 
@@ -103,7 +103,7 @@ SILE.registerCommand("section", function (options, content)
   SILE.call("goodbreak")
   SILE.call("bigskip")
   SILE.call("noindent")
-    SILE.call("font", { filename = SILE.scratch.fontproof.section.filename,
+    SILE.call("font", { family = SILE.scratch.fontproof.section.family,
                         size = SILE.scratch.fontproof.section.size }, function ()
                           SILE.call("raggedright",{},content)
     end)
@@ -118,7 +118,7 @@ SILE.registerCommand("subsection", function (options, content)
   SILE.call("goodbreak")
   SILE.call("bigskip")
   SILE.call("noindent")
-    SILE.call("font", { filename = SILE.scratch.fontproof.subsection.filename,
+    SILE.call("font", { family = SILE.scratch.fontproof.subsection.family,
                         size = SILE.scratch.fontproof.subsection.size }, function ()
                           SILE.call("raggedright",{},content)
     end)

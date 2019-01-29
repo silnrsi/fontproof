@@ -1,7 +1,6 @@
 \begin[class=fontproof]{document}
-\setTestFont[family="Georgia"]
+\setTestFont[family="Gentium Plus"]
 % Full test file for the fontproof package for SILE
-% If the Georgia font is not installed change the test font line above
 
 \section{Main section head}
 
@@ -15,7 +14,7 @@ Text under subsection head
 
 \proof{This is basic proof text using the test font and with no heading}
 
-\proof[size="10pt",filename="packages/fontproofsupport/Lato2OFL/Lato-Light.ttf",heading=A basic test]{This is another basic text with common parameters}
+%\proof[size="10pt",filename="packages/fontproofsupport/Lato2OFL/Lato-Light.ttf",heading=A basic test]{This is another basic text with common parameters}
 
 \proof[size="10pt,11pt,12pt,16pt",heading=A simple waterfall]{This is basic proof text in a range of sizes}
 
@@ -45,9 +44,9 @@ Adhesion: \adhesion[characters=adhesion]
 
 Here are some digits of pi: \pi[digits=500]
 
-\setTestFont[family="EB Garamond"]
-\proof[features = "Ligatures=Discretionary, Ligatures=Historic",language = "grk",direction = "rtl",shapers = "ot", color="green"]{This Turns on Historical Features}
-\setTestFont[family="Georgia"]
+%\setTestFont[family="EB Garamond"]
+%\proof[features = "Ligatures=Discretionary, Ligatures=Historic",language = "grk",direction = "rtl",shapers = "ot", color="green"]{This Turns on Historical Features}
+%\setTestFont[family="Georgia"]
 
 \section{Built-in SILE commands}
 

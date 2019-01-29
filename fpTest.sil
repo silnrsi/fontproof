@@ -1,5 +1,5 @@
 \begin[class=fontproof]{document}
-\setTestFont[filename="packages/fontproofsupport/Lato2OFL/Lato-Medium.ttf"]
+\setTestFont[family="Gentium Plus"]
 % Simple test file for the fontproof package for SILE
 
 Welcome to FontProof!

@@ -1,10 +1,9 @@
 \begin[class=fontproof]{document}
-\setTestFont[family="Georgia"]
+\setTestFont[family="Gentium Plus"]
 \font[size=30pt,weight=700]{Range test}\par
 \unicharchart[type=range,start=0100,end=01F7]
 
-\font[size=30pt,weight=700]{Repertoire test}\par
-\setTestFont[family="Gentium"]
-\unicharchart[type=all]
+%\font[size=30pt,weight=700]{Repertoire test}\par
+%\unicharchart[type=all]
 
 \end{document}
