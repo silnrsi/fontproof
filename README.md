@@ -22,8 +22,10 @@ As long as you run all your SILE files from within the original installation fol
 
 - Find your SILE installation directory,
 - Copy the file _classes/fontproof.lua_ into the _sile/classes_ folder, and
-- Copy the file _packages/fontprooftexts.lua_ and _packages/fontproofgroups.lua_ into your installation _sile/packages_ folder.
-- Copy the folder _packages/fontproofsupport_ into your installation _sile/packages_ folder.
+- Copy the following files into your installation _sile/packages_ folder:
+    - _packages/fontprooftexts.lua_
+    - _packages/fontproofgroups.lua_
+    - _packages/gutenberg-client.lua_
 
 ## Using the templates
 
@@ -250,10 +252,10 @@ FontProof includes a range of built-in test texts. Set the content of a `\proof`
 This uses dictionaries to produce garbage text made up of real words, similar to `\lorem`. However the words would only contain letters from a set you supply:
 
 ```
-\adhesion[chars=hamburgefonsiv]
+\adhesion[characters=hamburgefonsiv]
 ```
 
-Optional arguments are `words`, the number of words (defaulting to 120), and `dict`, the path of a dictionary file. The class looks in `/usr/share/dict/words` and `/usr/dict/words` if the `dict` option is not provided.
+Optional arguments are `words`, the number of words (defaulting to 120), and `dict`, the path of a dictionary file. The class looks in `/usr/share/dict/words` and `/usr/dict/words` if the `dict` option is not provided. Words are selected from the dictionary file if they contain only the characters specified.
 
 #### __\unicharchart__
 
