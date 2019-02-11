@@ -2,6 +2,7 @@
 \setTestFont[family="Gentium Plus"]
 \font[size=30pt,weight=700]{Range test}\par
 \unicharchart[type=range,start=0100,end=01F7]
+\unicharchart[type=range,start=1D500,end=1D51F]
 
 %\font[size=30pt,weight=700]{Repertoire test}\par
 %\unicharchart[type=all]

@@ -390,7 +390,8 @@ SILE.registerCommand("unicharchart", function (options, content)
           SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
           SILE.call("hbox", {}, function ()
             local header = string.format("%04X",cp)
-            SILE.typesetter:typeset(header:sub(1,3))
+            local hexDigits = string.len(header) - 1
+            SILE.typesetter:typeset(header:sub(1,hexDigits))
           end)
           local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
           local centeringglue = SILE.nodefactory.newGlue({width = (width-nbox.width)/2})
