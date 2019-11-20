@@ -66,7 +66,7 @@ SILE.registerCommand("setTestFont", function (options, content)
   end
   if testfilename == nil then
     for j=1,#(_G.unparsed) do
-      if _G.unparsed[j]=="-f" then
+      if _G.unparsed[j]=="-p" then
         testfilename = _G.unparsed[j+1]
       end
     end

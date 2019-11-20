@@ -43,9 +43,11 @@ You can also specify the test font on the sile command line and leave the font u
 \setTestFont[size=13pt]
 ```
 
-Use the `-f` parameter on the sile command, as in:
+Use the `-p` parameter on the sile command, as in:
 
-    $ sile fpTest.sil -f fontfilename.ttf
+    $ sile fpTest.sil -p fontfilename.ttf
+
+_(Note: In earlier versions of fontproof this was -f, however that needed to change to accommodate later changes to SILE itself.)_
 
 At this point there is only one template to use - _fpFull.sil_ - but more will follow. That template will show you almost all that FontProof can do. SILE itself is capable of far, far, more, and you're very welcome to play around with it.
 
