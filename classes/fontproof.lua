@@ -1,5 +1,5 @@
 -- fontproof / a tool for testing fonts
--- copyright 2016 SIL International and released under the MIT/X11 license
+-- copyright 2016-2019 SIL International and released under the MIT/X11 license
 
 local plain = SILE.require("classes/plain")
 local fontproof = plain { id = "fontproof", base = plain }
