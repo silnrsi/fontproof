@@ -8,9 +8,9 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 
 FontProof requires [SILE](https://github.com/simoncozens/sile). You'll need to install SILE according to that package's instructions, and then verify that it works by compiling the _examples/test.sil_ document.
 
-_Note that SILE is changing rapidly. The current class was developed for unreleased version 0.9.4 but also works with the also unreleased 0.9.5 current master. I will try to keep the class up to date for future released versions._
+_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.0._
 
-To install FontProof on SILE 0.9.5, run:
+To install FontProof on SILE 0.9.5 or later, run:
 
     sile -e 'installPackage("fontproof");os.exit()'
 
@@ -43,13 +43,14 @@ You can also specify the test font on the sile command line and leave the font u
 \setTestFont[size=13pt]
 ```
 
-Use the `-p` parameter on the sile command, as in:
+Then use the `-e` parameter on the sile command to set the `fontfile` parameter, as in:
 
-    $ sile fpTest.sil -p fontfilename.ttf
+    $ sile -e 'fontfile = "font.ttf"' test.sil
 
-_(Note: In earlier versions of fontproof this was -f, however that needed to change to accommodate later changes to SILE itself.)_
 
-At this point there is only one template to use - _fpFull.sil_ - but more will follow. That template will show you almost all that FontProof can do. SILE itself is capable of far, far, more, and you're very welcome to play around with it.
+_(Note: In earlier versions of fontproof this was `-f` or `-p`, however this a slightly more awkward but more robust way to do it.)_
+
+At this point there is one main template - _fpFull.sil_ - but more will follow. That template will show you almost all that FontProof can do. SILE itself is capable of far, far, more, and you're very welcome to play around with it.
 
 ## Adding or modifying tests
 
@@ -99,7 +100,7 @@ Details on the commands used to specify these are below.
 
 ## Contributing to the project
 
-FontProof is Copyright © 2016-2019 [SIL International](http://www.sil.org) and licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License). BTW - Despite the name similarity, SILE itself is not developed by SIL International, though we like the project very much. You're very welcome to contribute to both FontProof and SILE.
+FontProof is Copyright © 2016-2020 [SIL International](http://www.sil.org) and licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License). BTW - Despite the name similarity, SILE itself is not developed by SIL International, though we like the project very much. You're very welcome to contribute to both FontProof and SILE.
 
 ---
 
@@ -259,7 +260,24 @@ This uses dictionaries to produce garbage text made up of real words, similar to
 
 Optional arguments are `words`, the number of words (defaulting to 120), and `dict`, the path of a dictionary file. The class looks in `/usr/share/dict/words` and `/usr/dict/words` if the `dict` option is not provided. Words are selected from the dictionary file if they contain only the characters specified.
 
+####  __\gutenberg__
+
+This downloads and typesets a text from Project Gutenberg.
+
+```
+\gutenberg[id=100] % The complete works of Shakespeare
+```
+
+####  __\pi__
+
+Typesets some digits of pi:
+
+```
+\pi[digits=500]
+```
 #### __\unicharchart__
+
+_Note: In the current version of fontproof this command is broken!_
 
 This produces a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range.
 
@@ -276,22 +294,6 @@ This produces a table that shows every encoded character in the font, formatted 
 ```
 
 This produces the same, except only showing the given range of USVs.
-
-####  __\gutenberg__
-
-This downloads and typesets a text from Project Gutenberg.
-
-```
-\gutenberg[id=100] % The complete works of Shakespeare
-```
-
-####  __\pi__
-
-Typesets some digits of pi:
-
-```
-\pi[digits=500]
-```
 
 ## Commands provided natively by SILE
 

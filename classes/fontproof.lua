@@ -1,5 +1,5 @@
 -- fontproof / a tool for testing fonts
--- copyright 2016-2019 SIL International and released under the MIT/X11 license
+-- copyright 2016-2020 SIL International and released under the MIT/X11 license
 
 local plain = SILE.require("classes/plain")
 local fontproof = plain { id = "fontproof", base = plain }
@@ -65,11 +65,8 @@ SILE.registerCommand("setTestFont", function (options, content)
     SILE.scratch.fontproof.testfont.size = options.size
   end
   if testfilename == nil then
-    for j=1,#(_G.unparsed) do
-      if _G.unparsed[j]=="-p" then
-        testfilename = _G.unparsed[j+1]
-      end
-    end
+    testfilename = fontfile
+    -- fontfile is a variable that can only be set on the command line (see docs)
   end
   if testfamily then
     SILE.scratch.fontproof.testfont.family = testfamily
