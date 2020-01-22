@@ -47,6 +47,7 @@ Then use the `-e` parameter on the sile command to set the `fontfile` parameter,
 
     $ sile -e 'fontfile = "font.ttf"' test.sil
 
+For this to work you must have a `\setTestFont` command in your SILE file, even if only to set an initial size. Without that command any font specified on the command line will be ignored. Also - if you set the font name or filename in the SILE file it will _always_ override anything you try to set on the command line. 
 
 _(Note: In earlier versions of fontproof this was `-f` or `-p`, however this a slightly more awkward but more robust way to do it.)_
 
