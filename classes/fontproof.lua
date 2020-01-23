@@ -33,7 +33,7 @@ function fontproof:init()
   self:loadPackage("fontprooftexts")
   self:loadPackage("fontproofgroups")
   self:loadPackage("gutenberg-client")
-  SILE.settings.set("document.parindent",SILE.nodefactory.zeroGlue)
+  SILE.settings.set("document.parindent",SILE.nodefactory.glue(0))
   SILE.settings.set("document.spaceskip")
   self.pageTemplate.firstContentFrame = self.pageTemplate.frames["content"]
   return plain.init(self)
@@ -47,9 +47,9 @@ SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE 
     runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
   end
   SILE.typesetNaturally(SILE.getFrame("runningHead"), function()
-    SILE.settings.set("document.rskip", SILE.nodefactory.hfillGlue)
-    SILE.settings.set("typesetter.parfillskip", SILE.nodefactory.zeroGlue)
-    SILE.settings.set("document.spaceskip", SILE.length.new({ length = SILE.shaper:measureChar(" ").width }))
+    SILE.settings.set("document.rskip", SILE.nodefactory.hfillglue())
+    SILE.settings.set("typesetter.parfillskip", SILE.nodefactory.glue(0))
+    SILE.settings.set("document.spaceskip", SILE.shaper:measureChar(" ").width)
     SILE.call("font", { family = SILE.scratch.fontproof.runhead.family,
                         size = SILE.scratch.fontproof.runhead.size
                       }, {runheadinfo})
@@ -374,7 +374,7 @@ SILE.registerCommand("unicharchart", function (options, content)
   end
   local maxrows = math.ceil(#glyphs / rows)
   local maximum = rows * columns
-  local width = SILE.toPoints("100%fw") / columns
+  local width = SILE.measurement("100%fw"):absolute() / columns
   local done = 0
   while done < #glyphs do
     -- header row
@@ -391,7 +391,7 @@ SILE.registerCommand("unicharchart", function (options, content)
             SILE.typesetter:typeset(header:sub(1,hexDigits))
           end)
           local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
-          local centeringglue = SILE.nodefactory.newGlue({width = (width-nbox.width)/2})
+          local centeringglue = SILE.nodefactory.glue((width-nbox.width)/2)
           SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
           SILE.typesetter:pushHbox(nbox)
           SILE.typesetter:pushGlue(centeringglue)
@@ -410,12 +410,12 @@ SILE.registerCommand("unicharchart", function (options, content)
               local char = glyphs[ix+1].uni
               if glyphs[ix+1].present then
                 local left = SILE.shaper:measureChar(char).width
-                local centeringglue = SILE.nodefactory.newGlue({width = SILE.length.new({length = (width-left)/2})})
+                local centeringglue = SILE.nodefactory.glue((width-left)/2)
                 SILE.typesetter:pushGlue(centeringglue)
                 SILE.typesetter:typeset(char)
                 SILE.typesetter:pushGlue(centeringglue)
               else
-                SILE.typesetter:pushGlue(SILE.nodefactory.newGlue({width = SILE.length.new({length =width }) }))
+                SILE.typesetter:pushGlue(SILE.nodefactory.glue(width))
               end
               SILE.call("hbox")
           end
@@ -432,7 +432,7 @@ SILE.registerCommand("unicharchart", function (options, content)
               SILE.typesetter:typeset(string.format("%04X",glyphs[ix+1].cp))
             end)
             local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
-            local centeringglue = SILE.nodefactory.newGlue({width = (width-nbox.width)/2})
+            local centeringglue = SILE.nodefactory.glue((width-nbox.width)/2)
             SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
             SILE.typesetter:pushHbox(nbox)
             SILE.typesetter:pushGlue(centeringglue)
