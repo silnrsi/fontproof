@@ -384,7 +384,7 @@ SILE.registerCommand("unicharchart", function (options, content)
           local ix = done + j * rows
           local cp = rangeStart+ix
           if cp > rangeEnd then break end
-          SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          SILE.typesetter:pushHorizontal(SILE.nodefactory.zerohbox())
           SILE.call("hbox", {}, function ()
             local header = string.format("%04X",cp)
             local hexDigits = string.len(header) - 1
@@ -395,11 +395,11 @@ SILE.registerCommand("unicharchart", function (options, content)
           SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
           SILE.typesetter:pushHbox(nbox)
           SILE.typesetter:pushGlue(centeringglue)
-          SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+          SILE.typesetter:pushHorizontal(SILE.nodefactory.zerohbox())
         end
       end)
       SILE.call("bigskip")
-      SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+      SILE.typesetter:pushHorizontal(SILE.nodefactory.zerohbox())
     end
 
     for i = 0,rows-1 do
@@ -417,13 +417,13 @@ SILE.registerCommand("unicharchart", function (options, content)
               else
                 SILE.typesetter:pushGlue(SILE.nodefactory.newGlue({width = SILE.length.new({length =width }) }))
               end
-              SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+              SILE.typesetter:pushHorizontal(SILE.nodefactory.zerohbox())
           end
         end)
 
       end
       SILE.call("par")
-      SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+      SILE.typesetter:pushHorizontal(SILE.nodefactory.zerohbox())
       SILE.call("font", {size=usvsize}, function()
         for j = 0,columns-1 do
           local ix = done + j * rows + i
@@ -436,7 +436,7 @@ SILE.registerCommand("unicharchart", function (options, content)
             SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
             SILE.typesetter:pushHbox(nbox)
             SILE.typesetter:pushGlue(centeringglue)
-            SILE.typesetter:pushHbox(SILE.nodefactory.zeroHbox)
+            SILE.typesetter:pushHorizontal(SILE.nodefactory.zerohbox())
           end
         end
       end)
