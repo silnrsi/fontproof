@@ -76,7 +76,7 @@ SILE.registerCommand("setTestFont", function (options, content)
   options.family = testfamily
   options.filename = testfilename
   options.size = SILE.scratch.fontproof.testfont.size
-  SILE.Commands["font"](options, {})
+  SILE.call("font", options, {})
 end)
 
 -- optional way to override defaults
@@ -204,8 +204,8 @@ SILE.registerCommand("proof", function (options, content)
             end
           end
         end
-        SILE.Commands["font"](fontoptions, {})
-        SILE.call("raggedright",{},procontent)
+		SILE.call("font", fontoptions, {})
+        SILE.call("raggedright", {}, procontent)
       end)
     end
   end)
@@ -255,7 +255,7 @@ SILE.registerCommand("pattern", function(options, content)
     for j, c in ipairs(chars) do
       para = string.gsub(para,c," ")
     end
-    SILE.Commands["proof"]({size=size,type="pattern"}, {para})
+	SILE.call("proof", { size = size, type = "pattern" }, { para })
   end
 end)
 
