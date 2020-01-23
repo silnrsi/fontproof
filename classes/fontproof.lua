@@ -393,7 +393,7 @@ SILE.registerCommand("unicharchart", function (options, content)
           local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
           local centeringglue = SILE.nodefactory.glue((width-nbox.width)/2)
           SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
-          SILE.typesetter:pushHbox(nbox)
+          SILE.typesetter:pushHorizontal(nbox)
           SILE.typesetter:pushGlue(centeringglue)
           SILE.call("hbox")
         end
@@ -415,7 +415,7 @@ SILE.registerCommand("unicharchart", function (options, content)
                 SILE.typesetter:typeset(char)
                 SILE.typesetter:pushGlue(centeringglue)
               else
-                SILE.typesetter:pushGlue(SILE.nodefactory.glue(width))
+                SILE.typesetter:pushGlue(width)
               end
               SILE.call("hbox")
           end
@@ -434,7 +434,7 @@ SILE.registerCommand("unicharchart", function (options, content)
             local nbox = SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes]
             local centeringglue = SILE.nodefactory.glue((width-nbox.width)/2)
             SILE.typesetter.state.nodes[#SILE.typesetter.state.nodes] = centeringglue
-            SILE.typesetter:pushHbox(nbox)
+            SILE.typesetter:pushHorizontal(nbox)
             SILE.typesetter:pushGlue(centeringglue)
             SILE.call("hbox")
           end
