@@ -66,8 +66,10 @@ SILE.registerCommand("setTestFont", function (options, _)
     SILE.scratch.fontproof.testfont.size = options.size
   end
   if testfilename == nil then
+    -- NOTE: fontfile is a variable that can only be set on the command line (see docs)
+    -- See also https://github.com/sile-typesetter/sile/issues/722
+    -- luacheck: ignore fontfile
     testfilename = fontfile
-    -- fontfile is a variable that can only be set on the command line (see docs)
   end
   if testfamily then
     SILE.scratch.fontproof.testfont.family = testfamily
