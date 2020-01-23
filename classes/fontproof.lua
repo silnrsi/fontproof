@@ -55,8 +55,8 @@ SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE 
                       }, {runheadinfo})
     SILE.call("par")
   end)
-  return plain.endPage(self);
-end;
+  return plain.endPage(self)
+end
 
 SILE.registerCommand("setTestFont", function (options, content)
   local testfilename = options.filename or nil
