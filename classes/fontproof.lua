@@ -40,6 +40,7 @@ function fontproof:init()
 end
 
 fontproof.endPage = function(self)
+  local runheadinfo
   if SILE.scratch.fontproof.testfont.filename then
     runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.filename .. " - Input file: " .. 
 SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
@@ -58,7 +59,7 @@ SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE 
   return plain.endPage(self)
 end
 
-SILE.registerCommand("setTestFont", function (options, content)
+SILE.registerCommand("setTestFont", function (options, _)
   local testfilename = options.filename or nil
   local testfamily = options.family or nil
   if options.size then
@@ -80,13 +81,13 @@ SILE.registerCommand("setTestFont", function (options, content)
 end)
 
 -- optional way to override defaults
-SILE.registerCommand("setRunHeadStyle", function (options, content)
+SILE.registerCommand("setRunHeadStyle", function (options, _)
   SILE.scratch.fontproof.runhead.family = options.family
   SILE.scratch.fontproof.runhead.size = options.size or "8pt"
 end)
 
 -- basic text styles
-SILE.registerCommand("basic", function (options, content)
+SILE.registerCommand("basic", function (_, content)
   SILE.settings.temporarily(function()
     SILE.call("font", { filename = SILE.scratch.fontproof.testfont.filename,
                         size = SILE.scratch.fontproof.testfont.size }, function ()
@@ -95,7 +96,7 @@ SILE.registerCommand("basic", function (options, content)
   end)
 end)
 
-SILE.registerCommand("section", function (options, content)
+SILE.registerCommand("section", function (_, content)
   SILE.typesetter:leaveHmode()
   SILE.call("goodbreak")
   SILE.call("bigskip")
@@ -110,7 +111,7 @@ SILE.registerCommand("section", function (options, content)
   SILE.typesetter:inhibitLeading()
 end)
 
-SILE.registerCommand("subsection", function (options, content)
+SILE.registerCommand("subsection", function (_, content)
   SILE.typesetter:leaveHmode()
   SILE.call("goodbreak")
   SILE.call("bigskip")
@@ -127,6 +128,7 @@ end)
 
 -- useful functions
 local function fontsource (fam, file)
+  local family, filename
   if file then
     family = nil
     filename = file
@@ -144,7 +146,7 @@ local function fontsource (fam, file)
 end
 
 local function sizesplit (str)
-  sizes = {}
+  local sizes = {}
   for s in string.gmatch(str,"%w+") do
     if not string.find(s,"%a") then s = s .. "pt" end
     table.insert(sizes, s)
@@ -156,7 +158,7 @@ local function processtext (str)
   local newstr = str
   local temp = str[1]
   if string.sub(temp,1,5) == "text_" then
-    textname = string.sub(temp,6)
+    local textname = string.sub(temp,6)
     if SILE.scratch.fontproof.texts[textname] ~= nil then
       newstr[1] = SILE.scratch.fontproof.texts[textname].text
     end
@@ -189,16 +191,16 @@ SILE.registerCommand("proof", function (options, content)
         local fontoptions ={ family = proof.family, filename = proof.filename, size = proof.sizes[i] }
         -- Pass on some options from \proof to \font.
         local tocopy = { "language"; "direction"; "script" }
-        for i = 1,#tocopy do
-          if options[tocopy[i]] then fontoptions[tocopy[i]] = options[tocopy[i]] end
+        for j = 1,#tocopy do
+          if options[tocopy[j]] then fontoptions[tocopy[j]] = options[tocopy[j]] end
         end
         -- Add feature options
         if options.featuresraw then fontoptions.features = options.featuresraw end
         if options.features then
-          for i in SU.gtoke(options.features, ",") do
-            if i.string then
+          for j in SU.gtoke(options.features, ",") do
+            if j.string then
               local feat = {}
-              _,_,k,v = i.string:find("(%w+)=(.*)")
+              local _,_,k,v = j.string:find("(%w+)=(.*)")
               feat[k] = v
               SILE.call("add-font-feature", feat, {})
             end
@@ -213,25 +215,26 @@ end)
 
 SILE.registerCommand("pattern", function(options, content)
   --SU.required(options, "reps")
-  chars = std.string.split(options.chars,",")
-  reps = std.string.split(options.reps,",")
-  format = options.format or "table"
-  size = options.size or SILE.scratch.fontproof.testfont.size
-  cont = processtext(content)[1]
-  paras = {}
+  local chars = std.string.split(options.chars,",")
+  local reps = std.string.split(options.reps,",")
+  local format = options.format or "table"
+  local size = options.size or SILE.scratch.fontproof.testfont.size
+  local cont = processtext(content)[1]
+  local paras = {}
   if options.heading then SILE.call("subsection", {}, {options.heading})
                      else SILE.call("bigskip") end
-  for i, c in ipairs(chars) do
+  for i, _ in ipairs(chars) do
     local char, group = chars[i], reps[i]
+	local gitems
     if string.sub(group,1,6) == "group_" then
-      groupname = string.sub(group,7)
+      local groupname = string.sub(group,7)
       gitems = SU.splitUtf8(SILE.scratch.fontproof.groups[groupname])
     else
       gitems = SU.splitUtf8(group)
     end
     local newcont = ""
     for r = 1, #gitems do
-      newstr = string.gsub(cont,char,gitems[r])
+      local newstr = string.gsub(cont,char,gitems[r])
       newcont = newcont .. char .. newstr
     end
     cont = newcont
@@ -243,16 +246,15 @@ SILE.registerCommand("pattern", function(options, content)
       table.insert(paras,cont)
     end
   elseif format == "list" then
-    for i, c in ipairs(chars) do
+    for _, c in ipairs(chars) do
       cont = string.gsub(cont,c,chars[1])
     end
     paras = std.string.split(cont,chars[1])
   else
     table.insert(paras,cont)
   end
-  for i, p in ipairs(paras) do
-    local para = paras[i]
-    for j, c in ipairs(chars) do
+  for _, para in ipairs(paras) do
+    for _, c in ipairs(chars) do
       para = string.gsub(para,c," ")
     end
 	SILE.call("proof", { size = size, type = "pattern" }, { para })
@@ -261,7 +263,7 @@ end)
 
 SILE.registerCommand("patterngroup", function(options, content)
   SU.required(options, "name")
-  group = content[1]
+  local group = content[1]
   SILE.scratch.fontproof.groups[options.name] = group
 end)
 
@@ -276,14 +278,14 @@ local function shuffle(tbl)
   return tbl
 end
 
-SILE.registerCommand("adhesion", function(options,content)
+SILE.registerCommand("adhesion", function(options, _)
   local chars = SU.required(options, "characters")
   local f
   if #dict == 0 then
     if options.dict then
       f = io.open(options.dict, "r")
     else
-      f,e = io.open("/usr/share/dict/words", "r")
+      f = io.open("/usr/share/dict/words", "r")
       if not f then
         f = io.open("/usr/dict/words", "r")
       end
@@ -299,7 +301,7 @@ SILE.registerCommand("adhesion", function(options,content)
   end
 
   local wordcount = options.wordcount or 120
-  words = {}
+  local words = {}
   shuffle(dict)
   for _, word in ipairs(dict) do
     if wordcount == 0 then break end
@@ -323,13 +325,14 @@ local hasGlyph = function(g)
   return false
 end
 
-SILE.registerCommand("pi", function (options, content)
+SILE.registerCommand("pi", function (options, _)
   local digits = tonumber(options.digits) or 100
   local url = "https://uploadbeta.com/api/pi/?n="..(digits+4)
+  local http
   if not pcall(function() http = require("ssl.https") end) then
     SU.error("Install luasec from luarocks")
   end
-  local result, statuscode, content = http.request(url)
+  local result, statuscode, _ = http.request(url)
     if statuscode ~= 200 then
     SU.error("Could not read pi from "..url..": "..statuscode)
   end
@@ -340,7 +343,7 @@ SILE.registerCommand("pi", function (options, content)
   end
 end)
 
-SILE.registerCommand("unicharchart", function (options, content)
+SILE.registerCommand("unicharchart", function (options, _)
   local type = options.type or "all"
   local rows = tonumber(options.rows) or 16
   local columns = tonumber(options.columns) or 12
@@ -363,8 +366,8 @@ SILE.registerCommand("unicharchart", function (options, content)
       allglyphs[#allglyphs+1] = SU.utf8charfromcodepoint(tostring(cp))
     end
     local s = table.concat(allglyphs,"")
-    local options = SILE.font.loadDefaults({})
-    local items = SILE.shapers.harfbuzz:shapeToken(s, options)
+    local shape_options = SILE.font.loadDefaults({})
+    local items = SILE.shapers.harfbuzz:shapeToken(s, shape_options)
     for i in ipairs(items) do
       local cp = SU.codepoint(items[i].text)
       if items[i].gid ~= 0 and cp > 0 then
@@ -372,8 +375,6 @@ SILE.registerCommand("unicharchart", function (options, content)
       end
     end
   end
-  local maxrows = math.ceil(#glyphs / rows)
-  local maximum = rows * columns
   local width = SILE.measurement("100%fw"):absolute() / columns
   local done = 0
   while done < #glyphs do
