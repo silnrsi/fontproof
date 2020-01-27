@@ -10,7 +10,7 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 
 FontProof requires [SILE](https://github.com/simoncozens/sile). You'll need to install SILE according to that package's instructions, and then verify that it works by compiling the _examples/test.sil_ document.
 
-_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.0._
+_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.1._
 
 To install FontProof on SILE 0.9.5 or later, run:
 
@@ -279,8 +279,6 @@ Typesets some digits of pi:
 \pi[digits=500]
 ```
 #### __\unicharchart__
-
-_Note: In the current version of fontproof this command is broken!_
 
 This produces a simple unbordered table that would show a range of unicode and any glyphs that represent the USVs in that range.
 
