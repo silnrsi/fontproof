@@ -1,5 +1,7 @@
 # FontProof - a font design testing class for SILE
 
+[![Luacheck Lint Status](https://img.shields.io/github/workflow/status/silnrsi/fontproof/Luacheck?label=Luacheck&logo=Github)](https://github.com/silnrsi/fontproof/actions?workflow=Luacheck)
+
 FontProof enables you to produce PDF font test documents without fiddling with InDesign or other manual page layout or word processing programs. You can apply one of the predesigned test documents (to be added later) or use FontProof to build your own custom font test document.
 
 _Note that FontProof is very much a work-in-progress, so there's a lot that doesn't work yet, or doesn't work very elegantly. Use at your own risk, and help us make it better._
