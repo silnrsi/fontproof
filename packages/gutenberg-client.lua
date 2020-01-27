@@ -102,10 +102,11 @@ json.null = {}  -- This is a one-off table to represent the null value.
 function json.parse(str, pos, end_delim)
   pos = pos or 1
   if pos > #str then error('Reached unexpected end of input.') end
-  local pos = pos + #str:match('^%s*', pos)  -- Skip whitespace.
+  pos = pos + #str:match('^%s*', pos)  -- Skip whitespace.
   local first = str:sub(pos, pos)
   if first == '{' then  -- Parse an object.
-    local obj, key, delim_found = {}, true, true
+    local obj, delim_found = {}, true
+	local key
     pos = pos + 1
     while true do
       key, pos = json.parse(str, pos, '}')
@@ -116,7 +117,8 @@ function json.parse(str, pos, end_delim)
       pos, delim_found = skip_delim(str, pos, ',')
     end
   elseif first == '[' then  -- Parse an array.
-    local arr, val, delim_found = {}, true, true
+    local arr, delim_found = {}, true
+	local val
     pos = pos + 1
     while true do
       val, pos = json.parse(str, pos, ']')
@@ -142,13 +144,13 @@ function json.parse(str, pos, end_delim)
   end
 end
 
-function getGutenberg(id)
+local function getGutenberg(id)
   local url = "http://gutendex.com/books/"..id
   local http
   if not pcall(function() http = require("socket.http") end) then
     SU.error("Install luasocket from luarocks")
   end
-  local result, statuscode, content = http.request(url)
+  local result, statuscode, _ = http.request(url)
   if statuscode ~= 200 then
     SU.error("Could not load catalogue from "..url..": "..statuscode)
   end
@@ -166,12 +168,12 @@ function getGutenberg(id)
   end
   io.stderr:write("Downloading "..parsed.title.."... ")
   url = parsed.formats[gotformat]
-  local result, statuscode, content = http.request(url)
+  result, statuscode, _ = http.request(url)
   if statuscode ~= 200 then
     SU.error("Could not load file from "..url..": "..statuscode)
   end
   io.stderr:write("Done\n")
-  lines = {}
+  local lines = {}
   local go = false
   for token in SU.gtoke(result,"\n") do
     local s = token.string or token.separator
@@ -182,7 +184,7 @@ function getGutenberg(id)
   return table.concat(lines,"")
 end
 
-SILE.registerCommand("gutenberg", function (options,content)
+SILE.registerCommand("gutenberg", function (options, _)
   SU.required(options, "id")
   local text = getGutenberg(options.id)
   SILE.typesetter:typeset(text)
