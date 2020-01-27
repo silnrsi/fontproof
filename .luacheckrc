@@ -3,6 +3,11 @@ include_files = {
   "**/*.lua",
   ".luacheckrc"
 }
+exclude_files = {
+  ".lua",
+  ".luarocks",
+  ".install"
+}
 globals = {
   "SILE",
   "SU",
