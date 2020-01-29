@@ -367,6 +367,7 @@ end)
 
 SILE.registerCommand("unicharchart", function (options, _)
   local type = options.type or "all"
+  local showheader = SU.boolean(options.showheader, true)
   local rows = tonumber(options.rows) or 16
   local columns = tonumber(options.columns) or 12
   local charsize = tonumber(options.charsize) or 14
@@ -405,7 +406,7 @@ SILE.registerCommand("unicharchart", function (options, _)
   local done = 0
   while done < #glyphs do
     -- header row
-    if type == "range" then
+    if type == "range" and showheader then
       SILE.call("font", { size = charsize }, function()
         for j = 0, columns-1 do
           local ix = done + j * rows
