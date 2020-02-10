@@ -8,7 +8,7 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 
 ## Installation
 
-FontProof requires [SILE](https://github.com/simoncozens/sile). You'll need to install SILE according to that package's instructions, and then verify that it works by compiling the [_examples/test.sil_](https://github.com/sile-typesetter/sile/blob/master/examples/test.sil) document.
+FontProof requires [SILE](https://github.com/sile-typesetter/sile). You'll need to install SILE according to that package's instructions.
 
 _Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.1._
 
