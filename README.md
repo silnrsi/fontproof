@@ -8,19 +8,19 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 
 ## Installation
 
-FontProof requires [SILE](https://github.com/simoncozens/sile). You'll need to install SILE according to that package's instructions, and then verify that it works by compiling the _examples/test.sil_ document.
+FontProof requires [SILE](https://github.com/sile-typesetter/sile). You'll need to install SILE according to that package's instructions.
 
 _Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.1._
 
 To install FontProof on SILE 0.9.5 or later, run:
 
-    sile -e 'installPackage("fontproof");os.exit()'
+    $ sile -e 'installPackage("fontproof");os.exit()'
 
-On older versions, download this project (or better yet, _git clone_) into any folder on your drive. From within that directory you should then be able to compile the basic FontProof test doc:
+On older versions, download this project (or better yet, `git clone` it) into any folder on your drive. From within that directory you should then be able to compile the basic FontProof test doc:
 
     $ sile fpTest.sil
 
-As long as you run all your SILE files from within the original installation folder this is all you need to do. If you wish to be able to run FontProof from any location, then:
+As long as you run all your SILE files from within the original installation folder, this is all you need to do. If you wish to be able to run FontProof from any location, then:
 
 - Find your SILE installation directory,
 - Copy the file _classes/fontproof.lua_ into the _sile/classes_ folder, and
