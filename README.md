@@ -252,6 +252,11 @@ FontProof includes a range of built-in test texts. Set the content of a `\proof`
 | text_bringhurst | Kerning test from Bringhurst's "Elements of Typographic Style" |
 | text_allkernpairs | Text containing all combinations of Latin upper and lower case letters |
 | text_jafkerns | Kerning test from Just Another Foundry's text generator |
+| text_hoeflerLC | Lower case testing text from Hoefler & Co |
+| text_hoeflerSC | Small caps testing text from Hoefler & Co |
+| text_hoeflerUC | Upper case testing text from Hoefler & Co |
+
+(*Please note* that the Hoefler & Co texts are derived from [this repository](https://github.com/hoeflerco/proofs) under the [CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/) license. This means they are not available for commercial applications.)
 
 #### __\adhesion__
 
