@@ -2,7 +2,8 @@
 -- copyright 2016-2020 SIL International and released under the MIT/X11 license
 
 local plain = SILE.require("classes/plain")
-local fontproof = plain { id = "fontproof", base = plain }
+local fontproof = plain { id = "fontproof" }
+
 SILE.scratch.fontproof = {}
 SILE.scratch.fontproof = {
   runhead = {},
@@ -11,19 +12,6 @@ SILE.scratch.fontproof = {
   testfont = {},
   groups = {}
 }
-
-fontproof:declareFrame("content", {
-    left = "8%pw",
-    right = "92%pw",
-    top = "6%ph",
-    bottom = "96%ph"
-  })
-fontproof:declareFrame("runningHead", {
-    left = "left(content)",
-    right = "right(content)",
-    top = "top(content)-3%ph",
-    bottom = "top(content)-1%ph"
-  })
 
 -- set defaults
 SILE.scratch.fontproof.testfont.family = "Gentium Plus"
@@ -36,10 +24,25 @@ SILE.scratch.fontproof.subsection.family = "Gentium Plus"
 SILE.scratch.fontproof.subsection.size = "12pt"
 SILE.scratch.fontproof.sileversion = SILE.version
 
+fontproof.defaultFrameset = {
+  content = {
+    left = "8%pw",
+    right = "92%pw",
+    top = "6%ph",
+    bottom = "96%ph"
+  },
+  runningHead = {
+    left = "left(content)",
+    right = "right(content)",
+    top = "top(content)-3%ph",
+    bottom = "top(content)-1%ph"
+  }
+}
+
 local hb = require("justenoughharfbuzz")
 SILE.scratch.fontproof.hb = hb.version()
 
-function fontproof:init()
+function fontproof:init ()
   self:loadPackage("linespacing")
   self:loadPackage("lorem")
   self:loadPackage("specimen")
@@ -51,11 +54,11 @@ function fontproof:init()
   self:loadPackage("gutenberg-client")
   SILE.settings.set("document.parindent", SILE.nodefactory.glue(0))
   SILE.settings.set("document.spaceskip")
-  self.pageTemplate.firstContentFrame = self.pageTemplate.frames["content"]
   return plain.init(self)
 end
 
-fontproof.endPage = function(self)
+function fontproof:endPage ()
+  SILE.call("nofolios")
   local runheadinfo
   if SILE.scratch.fontproof.testfont.filename then
     runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.filename .. " - Input file: " ..  SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
