@@ -114,140 +114,144 @@ SILE.registerCommand("basic", function (_, content)
         filename = SILE.scratch.fontproof.testfont.filename,
         size = SILE.scratch.fontproof.testfont.size
       }, function () SILE.call("raggedright", {}, content) end)
-    end)
   end)
+end)
 
-  SILE.registerCommand("section", function (_, content)
-    SILE.typesetter:leaveHmode()
-    SILE.call("goodbreak")
-    SILE.call("bigskip")
-    SILE.call("noindent")
-    SILE.call("font", { family = SILE.scratch.fontproof.section.family,
-      size = SILE.scratch.fontproof.section.size }, function ()
-        SILE.call("raggedright", {}, content)
-      end)
-      SILE.call("novbreak")
-      SILE.call("medskip")
-      SILE.call("novbreak")
-      SILE.typesetter:inhibitLeading()
-    end)
+SILE.registerCommand("section", function (_, content)
+  SILE.typesetter:leaveHmode()
+  SILE.call("goodbreak")
+  SILE.call("bigskip")
+  SILE.call("noindent")
+  SILE.call("font", {
+      family = SILE.scratch.fontproof.section.family,
+      size = SILE.scratch.fontproof.section.size
+    }, function () SILE.call("raggedright", {}, content) end)
+  SILE.call("novbreak")
+  SILE.call("medskip")
+  SILE.call("novbreak")
+  SILE.typesetter:inhibitLeading()
+end)
 
-    SILE.registerCommand("subsection", function (_, content)
-      SILE.typesetter:leaveHmode()
-      SILE.call("goodbreak")
-      SILE.call("bigskip")
-      SILE.call("noindent")
-      SILE.call("font", {
-          family = SILE.scratch.fontproof.subsection.family,
-          size = SILE.scratch.fontproof.subsection.size
-        }, function () SILE.call("raggedright", {}, content) end)
-        SILE.call("novbreak")
-        SILE.call("medskip")
-        SILE.call("novbreak")
-        SILE.typesetter:inhibitLeading()
-      end)
+SILE.registerCommand("subsection", function (_, content)
+  SILE.typesetter:leaveHmode()
+  SILE.call("goodbreak")
+  SILE.call("bigskip")
+  SILE.call("noindent")
+  SILE.call("font", {
+      family = SILE.scratch.fontproof.subsection.family,
+      size = SILE.scratch.fontproof.subsection.size
+    }, function () SILE.call("raggedright", {}, content) end)
+  SILE.call("novbreak")
+  SILE.call("medskip")
+  SILE.call("novbreak")
+  SILE.typesetter:inhibitLeading()
+end)
 
-      -- useful functions
-      local function fontsource (fam, file)
-        local family, filename
-        if file then
-          family = nil
-          filename = file
-        elseif fam then
-          family = fam
-          filename = nil
-        elseif SILE.scratch.fontproof.testfont.filename then
-          filename = SILE.scratch.fontproof.testfont.filename
-          family = nil
-        else
-          family = SILE.scratch.fontproof.testfont.family
-          filename = nil
-        end
-        return family, filename
-      end
+-- useful functions
+local function fontsource (fam, file)
+  local family, filename
+  if file then
+    family = nil
+    filename = file
+  elseif fam then
+    family = fam
+    filename = nil
+  elseif SILE.scratch.fontproof.testfont.filename then
+    filename = SILE.scratch.fontproof.testfont.filename
+    family = nil
+  else
+    family = SILE.scratch.fontproof.testfont.family
+    filename = nil
+  end
+  return family, filename
+end
 
-      local function sizesplit (str)
-        local sizes = {}
-        for s in string.gmatch(str, "%w+") do
-          if not string.find(s, "%a") then s = s .. "pt" end
-          table.insert(sizes, s)
-        end
-        return sizes
-      end
+local function sizesplit (str)
+  local sizes = {}
+  for s in string.gmatch(str, "%w+") do
+    if not string.find(s, "%a") then s = s .. "pt" end
+    table.insert(sizes, s)
+  end
+  return sizes
+end
 
-      local function processtext (str)
-        local newstr = str
-        local temp = str[1]
-        if string.sub(temp, 1, 5) == "text_" then
-          local textname = string.sub(temp, 6)
-          if SILE.scratch.fontproof.texts[textname] ~= nil then
-            newstr[1] = SILE.scratch.fontproof.texts[textname].text
-          end
-        end
-        return newstr
-      end
-
-      -- special tests
-      SILE.registerCommand("proof", function (options, content)
-        local proof = {}
-        local procontent = processtext(content)
-        if options.type ~= "pattern" then
-          if options.heading then
-            SILE.call("subsection", {}, { options.heading })
-          else
-            SILE.call("bigskip")
-          end
-        end
-        if options.size then proof.sizes = sizesplit(options.size)
-      else proof.sizes = { SILE.scratch.fontproof.testfont.size } end
-      if options.shapers then
-        if SILE.settings.declarations["harfbuzz.subshapers"] then
-          SILE.settings.set("harfbuzz.subshapers", options.shapers)
-      else SU.warn("Can't use shapers on this version of SILE; upgrade!") end
+local function processtext (str)
+  local newstr = str
+  local temp = str[1]
+  if string.sub(temp, 1, 5) == "text_" then
+    local textname = string.sub(temp, 6)
+    if SILE.scratch.fontproof.texts[textname] ~= nil then
+      newstr[1] = SILE.scratch.fontproof.texts[textname].text
     end
-    proof.family, proof.filename = fontsource(options.family, options.filename)
-    SILE.call("color", options, function ()
-      for i = 1, #proof.sizes do
-        SILE.settings.temporarily(function()
-          local fontoptions = {
-            family = proof.family,
-            filename = proof.filename,
-            size = proof.sizes[i]
-          }
-          -- Pass on some options from \proof to \font.
-          local tocopy = { "language"; "direction"; "script" }
-          for j = 1, #tocopy do
-            if options[tocopy[j]] then fontoptions[tocopy[j]] = options[tocopy[j]] end
-          end
-          -- Add feature options
-          if options.featuresraw then fontoptions.features = options.featuresraw end
-          if options.features then
-            for j in SU.gtoke(options.features, ",") do
-              if j.string then
-                local feat = {}
-                local _, _, k, v = j.string:find("(%w+)=(.*)")
-                feat[k] = v
-                SILE.call("add-font-feature", feat, {})
-              end
+  end
+  return newstr
+end
+
+-- special tests
+SILE.registerCommand("proof", function (options, content)
+  local proof = {}
+  local procontent = processtext(content)
+  if options.type ~= "pattern" then
+    if options.heading then
+      SILE.call("subsection", {}, { options.heading })
+    else
+      SILE.call("bigskip")
+    end
+  end
+  if options.size then
+    proof.sizes = sizesplit(options.size)
+  else proof.sizes = { SILE.scratch.fontproof.testfont.size }
+  end
+  if options.shapers then
+    if SILE.settings.declarations["harfbuzz.subshapers"] then
+      SILE.settings.set("harfbuzz.subshapers", options.shapers)
+    else SU.warn("Can't use shapers on this version of SILE; upgrade!")
+    end
+  end
+  proof.family, proof.filename = fontsource(options.family, options.filename)
+  SILE.call("color", options, function ()
+    for i = 1, #proof.sizes do
+      SILE.settings.temporarily(function ()
+        local fontoptions = {
+          family = proof.family,
+          filename = proof.filename,
+          size = proof.sizes[i]
+        }
+        -- Pass on some options from \proof to \font.
+        local tocopy = { "language"; "direction"; "script" }
+        for j = 1, #tocopy do
+          if options[tocopy[j]] then fontoptions[tocopy[j]] = options[tocopy[j]] end
+        end
+        -- Add feature options
+        if options.featuresraw then fontoptions.features = options.featuresraw end
+        if options.features then
+          for j in SU.gtoke(options.features, ",") do
+            if j.string then
+              local feat = {}
+              local _, _, k, v = j.string:find("(%w+)=(.*)")
+              feat[k] = v
+              SILE.call("add-font-feature", feat, {})
             end
           end
-          SILE.call("font", fontoptions, {})
-          SILE.call("raggedright", {}, procontent)
-        end)
-      end
-    end)
+        end
+        SILE.call("font", fontoptions, {})
+        SILE.call("raggedright", {}, procontent)
+      end)
+    end
   end)
+end)
 
-  SILE.registerCommand("pattern", function(options, content)
-    --SU.required(options, "reps")
-    local chars = std.string.split(options.chars, ",")
-    local reps = std.string.split(options.reps, ",")
-    local format = options.format or "table"
-    local size = options.size or SILE.scratch.fontproof.testfont.size
-    local cont = processtext(content)[1]
-    local paras = {}
-    if options.heading then SILE.call("subsection", {}, { options.heading })
-  else SILE.call("bigskip") end
+SILE.registerCommand("pattern", function(options, content)
+  --SU.required(options, "reps")
+  local chars = std.string.split(options.chars, ",")
+  local reps = std.string.split(options.reps, ",")
+  local format = options.format or "table"
+  local size = options.size or SILE.scratch.fontproof.testfont.size
+  local cont = processtext(content)[1]
+  local paras = {}
+  if options.heading then SILE.call("subsection", {}, { options.heading })
+  else SILE.call("bigskip")
+  end
   for i, _ in ipairs(chars) do
     local char, group = chars[i], reps[i]
     local gitems
@@ -324,7 +328,6 @@ SILE.registerCommand("adhesion", function(options, _)
       SU.error("Couldn't find a dictionary file to use")
     end
   end
-
   local wordcount = options.wordcount or 120
   local words = {}
   shuffle(dict)
@@ -424,7 +427,6 @@ SILE.registerCommand("unicharchart", function (options, _)
       SILE.call("bigskip")
       SILE.call("hbox")
     end
-
     for i = 0, rows-1 do
       for j = 0, columns-1 do
         local ix = done + j * rows + i
@@ -466,7 +468,7 @@ SILE.registerCommand("unicharchart", function (options, _)
       SILE.call("bigskip")
     end
     SILE.call("pagebreak")
-    done = done  +rows*columns
+    done = done + rows * columns
   end
 end)
 
