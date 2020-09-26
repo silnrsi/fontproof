@@ -256,6 +256,7 @@ SILE.registerCommand("basic", function (_, content)
     end
     local newcont = ""
     for r = 1, #gitems do
+      if gitems[r] == "%" then gitems[r] = "%%" end
       local newstr = string.gsub(cont, char, gitems[r])
       newcont = newcont .. char .. newstr
     end
