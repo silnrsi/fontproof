@@ -1,0 +1,26 @@
+name: SILE
+
+on: [push, pull_request]
+
+jobs:
+
+  sile:
+    strategy:
+      fail-fast: false
+      matrix:
+        sileVersion: ["v0.10.10", "v0.10.11"]
+    runs-on: ubuntu-latest
+    container:
+      image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
+      options: --entrypoint=bash
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run test template
+      run: sile fpTest.sil
+    - name: Run gutenberg template
+      run: sile fpGutenberg.sil
+    - name: Run unichar template
+      run: sile fpUnichar.sil
+    - name: Run full template
+      run: sile fpFull.sil
