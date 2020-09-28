@@ -55,6 +55,20 @@ _(Note: In earlier versions of fontproof this was `-f` or `-p`, however this a s
 
 At this point there is one main template - _fpFull.sil_ - but more will follow. That template will show you almost all that FontProof can do. SILE itself is capable of far, far, more, and you're very welcome to play around with it.
 
+## Docker usage
+
+As an alternative method to install and use FontProof, a Docker image is avalable with SILE and the fontproof class baked in.
+
+```console
+$ alias fontproof='docker run -it --volume "$(pwd):/data" --user "$(id -u):$(id -g)" siletypesetter/fontproof:latest'
+$ fontproof input.sil
+```
+
+## Remote usage as GitHub Action
+
+FontProof can be executed as a GitHub Action on a remote repository.
+Actually any CI runner that can use Docker images as runners would work, but here is how to use it for Actions:
+
 ## Adding or modifying tests
 
 Each template can contain a full selection of tests. Each test is specified using a command in this general format:
