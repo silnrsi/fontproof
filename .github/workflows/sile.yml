@@ -24,3 +24,8 @@ jobs:
       run: sile fpUnichar.sil
     - name: Run full template
       run: sile fpFull.sil
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: fp-templates.zip
+        path: fp*.pdf
