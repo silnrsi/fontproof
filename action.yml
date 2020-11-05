@@ -5,4 +5,4 @@ runs:
   image: Dockerfile
 branding:
   icon: book-open
-  color: cyan
+  color: blue
