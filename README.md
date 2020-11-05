@@ -57,17 +57,50 @@ At this point there is one main template - _fpFull.sil_ - but more will follow. 
 
 ## Docker usage
 
-As an alternative method to install and use FontProof, a Docker image is avalable with SILE and the fontproof class baked in.
+As an alternative method to install and use FontProof, a [Docker image](https://hub.docker.com/repository/docker/siletypesetter/fontproof) is avalable with SILE and the *fontproof* class baked in and ready for use.
+Released versions are tagged to match (e.g. `v.1.3.4`), the latest release will be tagged `latest`, and a `master` tag is also available with the freshest development build.
+In order to be useful you need to tell the Docker run command a way to reach your source documents (and hence also to give it a place to write the output) as well as tell it who you are on the host machine so the output generated inside the container can be created with the expected ownership properties.
+You may find it easiest to run with an alias like this:
 
 ```console
 $ alias fontproof='docker run -it --volume "$(pwd):/data" --user "$(id -u):$(id -g)" siletypesetter/fontproof:latest'
-$ fontproof input.sil
+$ fontproof proofs.sil
 ```
 
-## Remote usage as GitHub Action
+## Remote usage
 
-FontProof can be executed as a GitHub Action on a remote repository.
-Actually any CI runner that can use Docker images as runners would work, but here is how to use it for Actions:
+Any remote CI system that can use Docker images as job runners could be configured to run FontProof jobs.
+Additionally a ready-made GitHub Action is [available on the marketplace](https://github.com/marketplace/actions/fontproof):
+
+```yaml
+name: FontProof
+on: [push, pull_request]
+jobs:
+  fontproof:
+    runs-on: ubuntu-latest
+    name: FontProof
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: FontProof
+        id: fontproof
+        uses: docker://siletypesetter/fontproof:latest
+        with:
+          args: proofs.sil
+```
+
+Add to your repository as `.github/workflows/fontproof.yaml`.
+This work flow assumes your project has a source file `proofs.sil` and will leave behind a `proofs.pdf`.
+Note that this Actions work flow explicitly uses a container fetched from Docker Hub because this is the fastest way to get rolling, and the comments in [the section about Docker](#docker-usage) regarding tagged versions besides `latest` apply equally here.
+
+Because this repository is itself a GitHub Action you can also use the standard `uses` syntax like this:
+
+```yaml
+        uses: sile-typesetter/fontproof@latest
+```
+
+But be warned that since GitHub rebuilds containers from scratch on every such invocation, this syntax is not recommended for regular use.
+
 
 ## Adding or modifying tests
 
