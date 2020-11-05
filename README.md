@@ -10,11 +10,11 @@ _Note that FontProof is very much a work-in-progress, so there's a lot that does
 
 ## Installation
 
-FontProof requires [SILE](https://github.com/sile-typesetter/sile). You'll need to install SILE according to that package's instructions.
+FontProof requires [The SILE Typesetter](https://sile-typesetter.org/). You'll need to install [SILE](https://github.com/sile-typesetter/sile) according to that package's instructions.
 
-_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.1._
+_Note that SILE is changing rapidly. The current class was developed for and tested with release 0.10.11 or newer._
 
-To install FontProof on SILE 0.9.5 or later, run:
+To install FontProof on SILE 0.10.11 or later, run:
 
     $ sile -e 'installPackage("fontproof");os.exit()'
 
@@ -118,7 +118,7 @@ Some tests may have only parameters, or only text, or neither, as in this exampl
 \pangrams
 ```
 
-More details on running commands in SILE can be found in the SILE documentation.
+More details on running commands in SILE can be found in the SILE [manual](https://sile-typesetter.org/manual/sile-latest.pdf).
 
 ## Headings and sections
 
