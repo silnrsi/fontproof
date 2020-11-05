@@ -1,5 +1,13 @@
 FROM docker.io/siletypesetter/sile:v0.10.12 AS fontproof
 
+# This is a hack to convince Docker Hub that its cache is behind the times.
+# This happens when the contents of our dependencies changes but the base
+# system hasn't been refreshed. It's helpful to have this as a separate layer
+# because it saves a lot of time for local builds, but it does periodically
+# need a poke. Incrementing this when changing dependencies or just when the
+# remote Docker Hub builds die should be enough.
+ARG DOCKER_HUB_CACHE=1
+
 # Freshen all base system packages
 RUN pacman --needed --noconfirm -Syuq && yes | pacman -Sccq
 
