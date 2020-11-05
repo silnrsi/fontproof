@@ -18,5 +18,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
           registry: docker.pkg.github.com
-          repository: sile-typesetter/sile/fontproof
+          repository: sile-typesetter/fontproof/fontproof
           tag_with_ref: true
