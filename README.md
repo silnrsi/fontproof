@@ -2,6 +2,7 @@
 
 [![Luacheck Lint Status](https://img.shields.io/github/workflow/status/sile-typesetter/fontproof/Luacheck?label=Luacheck&logo=Github)](https://github.com/sile-typesetter/fontproof/actions?workflow=Luacheck)
 [![SILE Render Status](https://img.shields.io/github/workflow/status/sile-typesetter/fontproof/SILE?label=SILE&logo=Github)](https://github.com/sile-typesetter/fontproof/actions?workflow=SILE)
+[![Docker Build Status](https://img.shields.io/docker/cloud/build/siletypesetter/fontproof?label=Docker%20Build&logo=Docker)](https://hub.docker.com/repository/docker/siletypesetter/fontproof/builds)
 
 FontProof enables you to produce PDF font test documents without fiddling with InDesign or other manual page layout or word processing programs. You can apply one of the predesigned test documents (to be added later) or use FontProof to build your own custom font test document.
 
