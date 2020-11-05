@@ -1,0 +1,8 @@
+name: FontProof
+description: A font design testing class for SILE
+runs:
+  using: docker
+  image: Dockerfile
+branding:
+  icon: book-open
+  color: cyan
