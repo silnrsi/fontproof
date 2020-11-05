@@ -1,0 +1,33 @@
+name: SILE
+
+on: [push, pull_request]
+
+jobs:
+
+  sile:
+    strategy:
+      fail-fast: false
+      matrix:
+        sileVersion: ["v0.10.11", "v0.10.12"]
+    runs-on: ubuntu-latest
+    container:
+      image: docker://siletypesetter/sile:${{ matrix.sileVersion }}
+      options: --entrypoint=bash
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install dictionary
+      run: pacman --noconfirm -S words
+    - name: Run test template
+      run: sile fpTest.sil
+    - name: Run gutenberg template
+      run: sile fpGutenberg.sil
+    - name: Run unichar template
+      run: sile fpUnichar.sil
+    - name: Run full template
+      run: sile fpFull.sil
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: fp-templates.zip
+        path: fp*.pdf
