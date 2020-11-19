@@ -2,7 +2,7 @@ name: Versioning
 
 on:
   release:
-    types: [published, edited]
+    types: [created, published, edited]
 
 jobs:
 
@@ -11,7 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: Actions-R-Us/actions-tagger@latest
+      - name: Update release tags
+        uses: Actions-R-Us/actions-tagger@v2
         env:
           GITHUB_TOKEN: "${{ github.token }}"
         with:
