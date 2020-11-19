@@ -91,7 +91,7 @@ jobs:
           args: proofs.sil
 ```
 
-Add to your repository as `.github/workflows/fontproof.yaml`.
+Add to your repository as `.github/workflows/fontproof.yml`.
 This work flow assumes your project has a source file `proofs.sil` and will leave behind a `proofs.pdf`.
 Note that this Actions work flow explicitly uses a container fetched from Docker Hub because this is the fastest way to get rolling, and the comments in [the section about Docker](#docker-usage) regarding tagged versions besides `latest` apply equally here.
 
