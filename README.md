@@ -340,7 +340,7 @@ Some examples:
 This produces a table that shows every encoded character in the font, formatted as a table with increasing USVs descending down a column, 16 chars per column, with a maximum of 12 columns before breaking into a new table. This is very similar to the tables in The Unicode Standard code charts, and could be the default settings for a simple `\unicharchart`.
 
 ```
-\unicharchart[type="range",begin="AA80",end="AADF"]
+\unicharchart[type="range",start="AA80",end="AADF"]
 ```
 
 This produces the same, except only showing the given range of USVs.
