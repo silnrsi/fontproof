@@ -1,20 +1,25 @@
-FROM docker.io/siletypesetter/sile:v0.10.15 AS fontproof
+#syntax=docker/dockerfile:1.2
+
+ARG SILETAG
+
+FROM docker.io/siletypesetter/sile:$SILETAG AS fontproof
 
 # This is a hack to convince Docker Hub that its cache is behind the times.
 # This happens when the contents of our dependencies changes but the base
-# system hasn't been refreshed. It's helpful to have this as a separate layer
+# system hasn’t been refreshed. It’s helpful to have this as a separate layer
 # because it saves a lot of time for local builds, but it does periodically
 # need a poke. Incrementing this when changing dependencies or just when the
 # remote Docker Hub builds die should be enough.
 ARG DOCKER_HUB_CACHE=0
 
+ARG RUNTIME_DEPS
 # Freshen all base system packages
 RUN pacman --needed --noconfirm -Syuq && yes | pacman -Sccq
 
-# Install fontproof dependencies
-RUN pacman --needed --noconfirm -Syq words && yes | pacman -Sccq
+# Install run-time dependecies (increment cache var above)
+RUN pacman --needed --noconfirm -Sq $RUNTIME_DEPS && yes | pacman -Sccq
 
-# Set at build time, forces Docker's layer caching to reset at this point
+# Set at build time, forces Docker’s layer caching to reset at this point
 ARG VCS_REF=0
 
 # Copy fontproof sources somewhere
