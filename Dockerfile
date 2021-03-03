@@ -1,4 +1,4 @@
-FROM docker.io/siletypesetter/sile:v0.10.13 AS fontproof
+FROM docker.io/siletypesetter/sile:v0.10.15 AS fontproof
 
 # This is a hack to convince Docker Hub that its cache is behind the times.
 # This happens when the contents of our dependencies changes but the base
