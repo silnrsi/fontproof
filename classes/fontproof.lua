@@ -59,10 +59,10 @@ end
 
 local function getGitCommit()
   -- If we are in a git repository, report the latest commit ID
-  local fh = io.popen("git describe --always --dirty='*'")
+  local fh = io.popen("git describe --long --tags --abbrev=7 --always --dirty='*'")
   local commit = fh:read()
   if commit then
-    return "("..commit..")"
+    return " ["..commit.."]"
   end
   return ""
 end
