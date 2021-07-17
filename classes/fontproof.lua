@@ -57,11 +57,22 @@ function fontproof:init ()
   return plain.init(self)
 end
 
+local function getGitCommit()
+  -- If we are in a git repository, report the latest commit ID
+  local fh = io.popen("git describe --long --tags --abbrev=7 --always --dirty='*'")
+  local commit = fh:read()
+  if commit then
+    return " ["..commit.."]"
+  end
+  return ""
+end
+
 function fontproof:endPage ()
   SILE.call("nofolios")
   local runheadinfo
   if SILE.scratch.fontproof.testfont.filename then
-    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.filename .. " - Input file: " ..  SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
+    local gitcommit = getGitCommit()
+    runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.filename .. gitcommit .. " - Input file: " ..  SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
   else
     runheadinfo = "Fontproof for: " .. SILE.scratch.fontproof.testfont.family .. " - Input file: " .. SILE.masterFilename .. ".sil - " .. os.date("%A %d %b %Y %X %z %Z") .. " - SILE " .. SILE.scratch.fontproof.sileversion .. " - HarfBuzz " ..  SILE.scratch.fontproof.hb
   end
