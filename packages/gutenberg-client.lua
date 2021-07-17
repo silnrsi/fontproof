@@ -145,14 +145,14 @@ function json.parse(str, pos, end_delim)
 end
 
 local function getGutenberg(id)
-  local url = "http://gutendex.com/books/"..id
+  local infourl = "https://gutendex.com/books/"..id.."/"
   local http
   if not pcall(function() http = require("socket.http") end) then
     SU.error("Install luasocket from luarocks")
   end
-  local result, statuscode, _ = http.request(url)
+  local result, statuscode, _ = http.request(infourl)
   if statuscode ~= 200 then
-    SU.error("Could not load catalogue from "..url..": "..statuscode)
+    SU.error("Could not load catalogue from "..infourl..": "..statuscode)
   end
   local parsed = json.parse(result)
   if not parsed.formats then
@@ -167,10 +167,10 @@ local function getGutenberg(id)
     SU.error("Couldn't find a suitable format")
   end
   io.stderr:write("Downloading "..parsed.title.."... ")
-  url = parsed.formats[gotformat]
-  result, statuscode, _ = http.request(url)
+  contenturl = parsed.formats[gotformat]
+  result, statuscode, _ = http.request(contenturl)
   if statuscode ~= 200 then
-    SU.error("Could not load file from "..url..": "..statuscode)
+    SU.error("Could not load file from "..contenturl..": "..statuscode)
   end
   io.stderr:write("Done\n")
   local lines = {}
